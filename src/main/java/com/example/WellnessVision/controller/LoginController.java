@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin("http://localhost:5173")
 public class LoginController {
 
     @Autowired
@@ -14,11 +15,12 @@ public class LoginController {
     @PostMapping("/register")
     public String register(@RequestBody Login login) {
         loginService.registerLogin(login);
-        return "User registered successfully!";
+        return "Registration successful!";
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password) {
-        return loginService.login(email, password);
+    public String login(@RequestBody Login login) {
+        System.out.println("Login endpoint called with email: " + login.getEmail());
+        return loginService.login(login.getEmail(), login.getPassword());
     }
 }
