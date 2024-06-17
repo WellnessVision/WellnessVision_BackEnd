@@ -23,4 +23,9 @@ public class LoginController {
         System.out.println("Login endpoint called with email: " + login.getEmail());
         return loginService.login(login.getEmail(), login.getPassword());
     }
+
+    @GetMapping("/logincount")
+    public Integer login_count(@RequestParam String user_type) {
+        return loginService.login_count(user_type);
+    }
 }

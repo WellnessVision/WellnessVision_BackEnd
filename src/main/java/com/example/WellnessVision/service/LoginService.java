@@ -22,4 +22,10 @@ public class LoginService {
     public void registerLogin(Login login) {
         loginRepository.save(login);
     }
+
+    public Integer login_count(String user_type) {
+        return loginRepository.login_count(user_type);
+    }
+
+
 }
