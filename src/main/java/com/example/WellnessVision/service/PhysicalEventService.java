@@ -7,7 +7,11 @@ import com.example.WellnessVision.repository.PhysicalEventOrderRepository;
 import com.example.WellnessVision.repository.PhysicalEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +28,7 @@ public class PhysicalEventService {
         order_repository = orderRepository;
     }
 
-    public HallAvailability getEventsByCapacityAndStatus(int capacity, String hall_type, String status, LocalDate date, int start_time, int end_time, String event_title, String event_type, int duration, int ticket_price) {
+    public HallAvailability getEventsByCapacityAndStatus(int capacity, String hall_type, String status, LocalDate date, int start_time, int end_time, String event_title, String event_type, int duration, int ticket_price, String eventImage) throws IOException {
         PhysicalEvent physicalEvent = new PhysicalEvent();
         physicalEvent.setEventTitle(event_title);
         physicalEvent.setFinalEventType(event_type);
@@ -34,6 +38,7 @@ public class PhysicalEventService {
         physicalEvent.setFinalDuration(duration);
         physicalEvent.setCapacity(capacity);
         physicalEvent.setTicketPrice(ticket_price);
+        physicalEvent.setEventImage(eventImage);
         List<Hall> halls = new ArrayList<>();
         halls =  repository.findByCapacityAndStatus(capacity, hall_type, status);
         for (Hall hall : halls) {

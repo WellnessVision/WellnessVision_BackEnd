@@ -1,5 +1,8 @@
 package com.example.WellnessVision.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 import java.time.LocalDate;
 
 public class PhysicalEvent {
@@ -13,6 +16,11 @@ public class PhysicalEvent {
     private int finalDuration;
     private int expectedCapacity;
     private int ticketPrice;
+    private String eventImage;
+
+    public PhysicalEvent() {
+    }
+
 
     public String getEventTitle() {
         return eventTitle;
@@ -84,5 +92,13 @@ public class PhysicalEvent {
 
     public void setTicketPrice(int ticketPrice) {
         this.ticketPrice = ticketPrice;
+    }
+
+    public String getEventImage() {
+        return eventImage;
+    }
+
+    public void setEventImage(String eventImage) {
+        this.eventImage = eventImage;
     }
 }

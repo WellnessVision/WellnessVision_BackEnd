@@ -7,6 +7,8 @@ import com.example.WellnessVision.service.PhysicalEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @CrossOrigin("http://localhost:5173")
 
@@ -16,9 +18,9 @@ public class PhysicalEventController {
     private PhysicalEventService service;
 
     @PostMapping("/physicalEvent")
-    public HallAvailability getEventsByCapacityAndStatus(@RequestBody PhysicalEvent physicalEvent) {
+    public HallAvailability getEventsByCapacityAndStatus(@RequestBody PhysicalEvent physicalEvent) throws IOException {
         String State = "Available";
-        return service.getEventsByCapacityAndStatus(physicalEvent.getExpectedCapacity(),physicalEvent.getHallType(), State, physicalEvent.getDate(), physicalEvent.getStartTime(), physicalEvent.getEndTime(), physicalEvent.getEventTitle(), physicalEvent.getFinalEventType(), physicalEvent.getFinalDuration(), physicalEvent.getTicketPrice());
+        return service.getEventsByCapacityAndStatus(physicalEvent.getExpectedCapacity(),physicalEvent.getHallType(), State, physicalEvent.getDate(), physicalEvent.getStartTime(), physicalEvent.getEndTime(), physicalEvent.getEventTitle(), physicalEvent.getFinalEventType(), physicalEvent.getFinalDuration(), physicalEvent.getTicketPrice(), physicalEvent.getEventImage());
     }
 
     @PutMapping("/physicalEvent")
