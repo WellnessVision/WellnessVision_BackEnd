@@ -1,4 +1,4 @@
-package com.example.WellnessVision.otherModel;
+package com.example.WellnessVision.dto;
 
 import java.time.LocalDate;
 
