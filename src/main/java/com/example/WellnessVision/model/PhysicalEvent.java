@@ -21,6 +21,7 @@ public class PhysicalEvent {
     private int finalDuration;
     private int capacity;
     private int ticketPrice;
+    private String eventImage;
 
     public PhysicalEvent() {
     }
@@ -103,5 +104,13 @@ public class PhysicalEvent {
 
     public void setTicketPrice(int ticketPrice) {
         this.ticketPrice = ticketPrice;
+    }
+
+    public String getEventImage() {
+        return eventImage;
+    }
+
+    public void setEventImage(String eventImage) {
+        this.eventImage = eventImage;
     }
 }
