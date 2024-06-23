@@ -16,7 +16,10 @@ public class PhysicalEvent {
     private int finalDuration;
     private int expectedCapacity;
     private int ticketPrice;
-    private String eventImage;
+    private String language;
+    private String eventDescription;
+    private int hpId;
+    private String nullImage;
 
     public PhysicalEvent() {
     }
@@ -94,11 +97,35 @@ public class PhysicalEvent {
         this.ticketPrice = ticketPrice;
     }
 
-    public String getEventImage() {
-        return eventImage;
+    public String getNullImage() {
+        return nullImage;
     }
 
-    public void setEventImage(String eventImage) {
-        this.eventImage = eventImage;
+    public void setNullImage(String nullImage) {
+        this.nullImage = nullImage;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
+    }
+
+    public int getHpId() {
+        return hpId;
+    }
+
+    public void setHpId(int hpId) {
+        this.hpId = hpId;
     }
 }
