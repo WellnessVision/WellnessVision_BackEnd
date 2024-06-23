@@ -1,9 +1,6 @@
 package com.example.WellnessVision.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import javax.xml.crypto.Data;
 import java.time.LocalDate;
@@ -22,6 +19,15 @@ public class PhysicalEvent {
     private int capacity;
     private int ticketPrice;
     private String eventImage;
+    private int hall_capacity;
+    private int total_hall_charge;
+    private double advance_percentage;
+    private int advance_payment;
+    private int payment_id;
+    private String language;
+    @Column(length = 1000)
+    private String event_description;
+    private int hp_id;
 
     public PhysicalEvent() {
     }
@@ -112,5 +118,69 @@ public class PhysicalEvent {
 
     public void setEventImage(String eventImage) {
         this.eventImage = eventImage;
+    }
+
+    public int getHall_capacity() {
+        return hall_capacity;
+    }
+
+    public void setHall_capacity(int hall_capacity) {
+        this.hall_capacity = hall_capacity;
+    }
+
+    public int getTotal_hall_charge() {
+        return total_hall_charge;
+    }
+
+    public void setTotal_hall_charge(int total_hall_charge) {
+        this.total_hall_charge = total_hall_charge;
+    }
+
+    public double getAdvance_percentage() {
+        return advance_percentage;
+    }
+
+    public void setAdvance_percentage(double advance_percentage) {
+        this.advance_percentage = advance_percentage;
+    }
+
+    public int getAdvance_payment() {
+        return advance_payment;
+    }
+
+    public void setAdvance_payment(int advance_payment) {
+        this.advance_payment = advance_payment;
+    }
+
+    public int getPayment_id() {
+        return payment_id;
+    }
+
+    public void setPayment_id(int payment_id) {
+        this.payment_id = payment_id;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getEvent_description() {
+        return event_description;
+    }
+
+    public void setEvent_description(String event_description) {
+        this.event_description = event_description;
+    }
+
+    public int getHp_id() {
+        return hp_id;
+    }
+
+    public void setHp_id(int hp_id) {
+        this.hp_id = hp_id;
     }
 }
