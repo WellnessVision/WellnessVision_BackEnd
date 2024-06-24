@@ -105,4 +105,9 @@ public class PhysicalEventService {
     public List<PhysicalEvent> getPhysicalEventForHP(int hp_id) {
         return order_repository.getPhysicalEventForHP(hp_id);
     }
+
+    public PhysicalEvent getOnePhysicalEventDetailForHP(int event_id) {
+        return order_repository.getOnePhysicalEventDetailForHP(event_id);
+    }
+
 }
