@@ -8,6 +8,7 @@ public class HallAvailability {
     private int capacity;
     private int charge;
     private int event_id;
+    private double advance_percentage;
 
     public String getHall_id() {
         return hall_id;
@@ -47,5 +48,13 @@ public class HallAvailability {
 
     public void setEvent_id(int event_id) {
         this.event_id = event_id;
+    }
+
+    public double getAdvance_percentage() {
+        return advance_percentage;
+    }
+
+    public void setAdvance_percentage(double advance_percentage) {
+        this.advance_percentage = advance_percentage;
     }
 }
