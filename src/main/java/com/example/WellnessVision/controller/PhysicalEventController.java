@@ -19,6 +19,7 @@ public class PhysicalEventController {
     @Autowired
     private PhysicalEventService service;
 
+
     @PostMapping("/physicalEvent")
     public HallAvailability getEventsByCapacityAndStatus(@RequestBody PhysicalEvent physicalEvent) throws IOException {
         String Available = "Available";
