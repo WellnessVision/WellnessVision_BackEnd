@@ -1,9 +1,13 @@
 package com.example.WellnessVision.controller;
 
+import com.example.WellnessVision.dto.EventID;
 import com.example.WellnessVision.dto.HealthProfessionalRegistrationRequestDto;
+import com.example.WellnessVision.model.HealthProfessional;
 import com.example.WellnessVision.model.HealthProfessionalRegistrationRequest;
+import com.example.WellnessVision.model.Login;
 import com.example.WellnessVision.service.FileUploadService;
 import com.example.WellnessVision.service.HealthProfessionalRegistrationRequestService;
+import com.example.WellnessVision.service.LoginService;
 import com.example.WellnessVision.service.PasswordHashingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +28,9 @@ public class HealthProfessionalRegistrationRequestController {
     private FileUploadService fileUploadService;
 
     @Autowired
+    private LoginService loginService;
+
+    @Autowired
     private HealthProfessionalRegistrationRequestService healthProfessionalRegistrationRequestService;
 
     @PostMapping("/healthProfessionalRegistrationRequest")
@@ -37,6 +44,7 @@ public class HealthProfessionalRegistrationRequestController {
             @RequestParam("province") String province,
             @RequestParam("zip") String zip,
             @RequestParam("email") String email,
+            @RequestParam("phoneNumber") String phoneNumber,
             @RequestParam("profilePicture") MultipartFile profilePicture,
             @RequestParam("password") String password,
             @RequestParam("profession") String profession,
@@ -75,6 +83,7 @@ public class HealthProfessionalRegistrationRequestController {
         healthProfessionalRegistrationRequest.setProvince(province);
         healthProfessionalRegistrationRequest.setZip(zip);
         healthProfessionalRegistrationRequest.setEmail(email);
+        healthProfessionalRegistrationRequest.setPhoneNumber(phoneNumber);
         healthProfessionalRegistrationRequest.setProfilePicture(ProfilePictureLink);
         healthProfessionalRegistrationRequest.setPassword(hashedPassword);
         healthProfessionalRegistrationRequest.setProfession(profession);
@@ -88,9 +97,51 @@ public class HealthProfessionalRegistrationRequestController {
         healthProfessionalRegistrationRequestService.healthProfessionalRegistrationRequestSave(healthProfessionalRegistrationRequest);
     }
 
-    @GetMapping("/ViewHealthProfessionalRegistrationRequest")
+    @GetMapping("/viewHealthProfessionalRegistrationRequest")
     public List<HealthProfessionalRegistrationRequest> viewHealthProfessionalRegistrationRequest(){
         return healthProfessionalRegistrationRequestService.viewHealthProfessionalRegistrationRequest();
+    }
+
+    @GetMapping("/viewOneHealthProfessionalRegistrationRequest")
+    public HealthProfessionalRegistrationRequest viewOneHealthProfessionalRegistrationRequest(@RequestParam("requestId") int requestId){
+        return healthProfessionalRegistrationRequestService.viewOneHealthProfessionalRegistrationRequest(requestId);
+    }
+
+    @PutMapping("/acceptHealthProfessionalRegistrationRequest")
+    public void acceptHealthProfessionalRegistrationRequest(@RequestParam("requestId") int requestId) throws IOException {
+        HealthProfessionalRegistrationRequest healthProfessionalRegistrationRequest = healthProfessionalRegistrationRequestService.viewOneHealthProfessionalRegistrationRequest(requestId);
+        Login login = new Login();
+        login.setEmail(healthProfessionalRegistrationRequest.getEmail());
+        login.setPassword(healthProfessionalRegistrationRequest.getPassword());
+        login.setUser_type("HP");
+        loginService.registerLogin(login);
+        HealthProfessional healthProfessional = new HealthProfessional(
+                login.getId(),
+                healthProfessionalRegistrationRequest.getFirstName(),
+                healthProfessionalRegistrationRequest.getLastName(),
+                healthProfessionalRegistrationRequest.getAddress(),
+                healthProfessionalRegistrationRequest.getAddress2(),
+                healthProfessionalRegistrationRequest.getCity(),
+                healthProfessionalRegistrationRequest.getDistrict(),
+                healthProfessionalRegistrationRequest.getProvince(),
+                healthProfessionalRegistrationRequest.getZip(),
+                healthProfessionalRegistrationRequest.getEmail(),
+                healthProfessionalRegistrationRequest.getPhoneNumber(),
+                healthProfessionalRegistrationRequest.getProfilePicture(),
+                healthProfessionalRegistrationRequest.getPassword(),
+                healthProfessionalRegistrationRequest.getProfession(),
+                healthProfessionalRegistrationRequest.getOrganization(),
+                healthProfessionalRegistrationRequest.getRegNo(),
+                healthProfessionalRegistrationRequest.getOwnership(),
+                healthProfessionalRegistrationRequest.getCertificateImage(),
+                healthProfessionalRegistrationRequest.getOtherVerificationPdf(),
+                healthProfessionalRegistrationRequest.getRequestTime(),
+                LocalDateTime.now()
+        );
+
+        healthProfessionalRegistrationRequestService.healthProfessionalSave(healthProfessional);
+        healthProfessionalRegistrationRequestService.deleteHealthProfessionalRegistrationRequest(requestId);
+
     }
 
 }

@@ -8,10 +8,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
-public class HealthProfessionalRegistrationRequest {
+public class HealthProfessional {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int requestId;
+    private int healthProfessionalId;
     private String firstName;
     private String lastName;
     private String address;
@@ -31,16 +30,41 @@ public class HealthProfessionalRegistrationRequest {
     private String certificateImage;
     private String otherVerificationPdf;
     private LocalDateTime requestTime;
+    private LocalDateTime acceptTime;
 
-    public HealthProfessionalRegistrationRequest() {
+    public HealthProfessional() {
     }
 
-    public int getRequestId() {
-        return requestId;
+    public HealthProfessional(int healthProfessionalId, String firstName, String lastName, String address, String address2, String city, String district, String province, String zip, String email, String phoneNumber, String profilePicture, String password, String profession, String organization, String regNo, String ownership, String certificateImage, String otherVerificationPdf, LocalDateTime requestTime, LocalDateTime acceptTime) {
+        this.healthProfessionalId = healthProfessionalId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.address2 = address2;
+        this.city = city;
+        this.district = district;
+        this.province = province;
+        this.zip = zip;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.profilePicture = profilePicture;
+        this.password = password;
+        this.profession = profession;
+        this.organization = organization;
+        this.regNo = regNo;
+        this.ownership = ownership;
+        this.certificateImage = certificateImage;
+        this.otherVerificationPdf = otherVerificationPdf;
+        this.requestTime = requestTime;
+        this.acceptTime = acceptTime;
     }
 
-    public void setRequestId(int requestId) {
-        this.requestId = requestId;
+    public int getHealthProfessionalId() {
+        return healthProfessionalId;
+    }
+
+    public void setHealthProfessionalId(int healthProfessionalId) {
+        this.healthProfessionalId = healthProfessionalId;
     }
 
     public String getFirstName() {
@@ -194,4 +218,13 @@ public class HealthProfessionalRegistrationRequest {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public LocalDateTime getAcceptTime() {
+        return acceptTime;
+    }
+
+    public void setAcceptTime(LocalDateTime acceptTime) {
+        this.acceptTime = acceptTime;
+    }
 }
+

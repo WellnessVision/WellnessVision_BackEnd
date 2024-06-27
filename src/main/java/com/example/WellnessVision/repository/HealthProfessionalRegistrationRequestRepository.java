@@ -12,4 +12,7 @@ public interface HealthProfessionalRegistrationRequestRepository extends JpaRepo
     @Query(value = "SELECT * FROM health_professional_registration_request", nativeQuery = true)
     List<HealthProfessionalRegistrationRequest> viewHealthProfessionalRegistrationRequest();
 
+    @Query(value = "SELECT * FROM health_professional_registration_request WHERE request_id = ?1", nativeQuery = true)
+    HealthProfessionalRegistrationRequest viewOneHealthProfessionalRegistrationRequest(int requestId);
+
 }
