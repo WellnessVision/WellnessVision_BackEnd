@@ -18,6 +18,8 @@ public class PhysicalEventPayment {
     private LocalDateTime payment_time;
     private int amount;
     private String payment_state;
+    private String payment_description;
+    private int hp_id;
 
     public PhysicalEventPayment() {
     }
@@ -54,12 +56,12 @@ public class PhysicalEventPayment {
         this.payment_time = payment_time;
     }
 
-    public String getPayment_state() {
-        return payment_state;
+    public int getHp_id() {
+        return hp_id;
     }
 
-    public void setPayment_state(String payment_state) {
-        this.payment_state = payment_state;
+    public void setHp_id(int hp_id) {
+        this.hp_id = hp_id;
     }
 
     public int getAmount() {
@@ -68,5 +70,21 @@ public class PhysicalEventPayment {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public String getPayment_state() {
+        return payment_state;
+    }
+
+    public void setPayment_state(String payment_state) {
+        this.payment_state = payment_state;
+    }
+
+    public String getPayment_description() {
+        return payment_description;
+    }
+
+    public void setPayment_description(String payment_description) {
+        this.payment_description = payment_description;
     }
 }
