@@ -12,26 +12,38 @@ public class NormalUser {
     private int user_id;
     private String user_type;
     private String email;
-    private LocalDate dob;
+    private String phone;
+    private String district;
+    private String city;
+    private String address;
+    private String address2;
     private String firstName;
     private String lastName;
     private String preferences;
     private String province;
     private String password;
 
+    private String profilePic;
+
 
     public NormalUser(){
     }
-    public NormalUser(int user_id, String user_type, String email, LocalDate dob, String firstName, String lastName, String preferences, String province, String password) {
+
+    public NormalUser(int user_id, String user_type, String email, String phone, String district, String city, String address, String address2, String firstName, String lastName, String preferences, String province, String password, String profilePic) {
         this.user_id = user_id;
         this.user_type = user_type;
         this.email = email;
-        this.dob = dob;
+        this.phone = phone;
+        this.district = district;
+        this.city = city;
+        this.address = address;
+        this.address2 = address2;
         this.firstName = firstName;
         this.lastName = lastName;
         this.preferences = preferences;
         this.province = province;
         this.password = password;
+        this.profilePic = profilePic;
     }
 
     public int getUser_id() {
@@ -58,12 +70,45 @@ public class NormalUser {
         this.email = email;
     }
 
-    public LocalDate getDob() {
-        return dob;
+
+    public String getPhone() {
+        return phone;
     }
 
-    public void setDob(LocalDate dob) {
-        this.dob = dob;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+
+    public void setAddress2(String address2) {
+        this.address2 = address2;
     }
 
     public String getFirstName() {
@@ -104,5 +149,13 @@ public class NormalUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
     }
 }

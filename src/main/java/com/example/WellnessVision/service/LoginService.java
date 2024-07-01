@@ -2,6 +2,8 @@ package com.example.WellnessVision.service;
 
 import com.example.WellnessVision.model.Login;
 import com.example.WellnessVision.repository.LoginRepository;
+import com.example.WellnessVision.repository.NormalUserRegisterRepository;
+import com.example.WellnessVision.model.NormalUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,12 +11,16 @@ import org.springframework.stereotype.Service;
 public class LoginService {
     @Autowired
     private LoginRepository loginRepository;
+    @Autowired
+    private NormalUserRegisterRepository normalUserRegisterRepository ;
 
     public String login(String email, String password) {
         Login login = loginRepository.findByEmail(email).orElse(null);
 
+
         if (login != null && login.getPassword().equals(password)) {
-            return "Login successful!";
+
+            return " Login successful!";
         }
         return "Invalid email or password";
     }
