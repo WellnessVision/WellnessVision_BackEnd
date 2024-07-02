@@ -5,6 +5,8 @@ import com.example.WellnessVision.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @CrossOrigin("http://localhost:5173")
 public class LoginController {
@@ -12,20 +14,19 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @PostMapping("/register")
-    public String register(@RequestBody Login login) {
-        loginService.registerLogin(login);
-        return "Registration successful!";
+//    @PostMapping("/register")
+//    public String register(@RequestBody Login login) {
+//        loginService.registerLogin(login);
+//        return "Registration successful!";
+//    }
+
+    @GetMapping("/login")
+    public Optional<Login> login(@RequestParam("email") String email, @RequestParam("password") String password) {
+        return loginService.login(email,password);
     }
 
-    @PostMapping("/login")
-    public String login(@RequestBody Login login) {
-        System.out.println("Login endpoint called with email: " + login.getEmail());
-        return loginService.login(login.getEmail(), login.getPassword());
-    }
-
-    @GetMapping("/logincount")
-    public Integer login_count(@RequestParam String user_type) {
-        return loginService.login_count(user_type);
-    }
+//    @GetMapping("/logincount")
+//    public Integer login_count(@RequestParam String user_type) {
+//        return loginService.login_count(user_type);
+//    }
 }

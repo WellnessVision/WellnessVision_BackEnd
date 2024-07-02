@@ -1,9 +1,6 @@
 package com.example.WellnessVision.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Login {
@@ -13,6 +10,7 @@ public class Login {
 
     private String user_type;
 
+    @Column(unique = true, nullable = false)
     private String email;
     private String password;
 

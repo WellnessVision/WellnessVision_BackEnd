@@ -20,6 +20,10 @@ public class PhysicalEvent {
     private String eventDescription;
     private int hpId;
     private String nullImage;
+    private String accountNumber;
+    private String accountOwnerName;
+    private String branchName;
+    private String bankName;
 
     public PhysicalEvent() {
     }
@@ -127,5 +131,37 @@ public class PhysicalEvent {
 
     public void setHpId(int hpId) {
         this.hpId = hpId;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getAccountOwnerName() {
+        return accountOwnerName;
+    }
+
+    public void setAccountOwnerName(String accountOwnerName) {
+        this.accountOwnerName = accountOwnerName;
+    }
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 }

@@ -27,14 +27,17 @@ public class PhysicalEventImageUploadController {
     private PhysicalEventService physicalEventService;
 
     @PostMapping("/physicalEventImageUpload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("event_id") int event_id, @RequestParam("hall_capacity") int hall_capacity, @RequestParam("total_hall_charge") int total_hall_charge, @RequestParam("advance_percentage") double advance_percentage, @RequestParam("advance_payment") int advance_payment, @RequestParam("payment_state") String payment_state, @RequestParam("userEmail") String userEmail) {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("event_id") int event_id, @RequestParam("hall_capacity") int hall_capacity, @RequestParam("total_hall_charge") int total_hall_charge, @RequestParam("advance_percentage") double advance_percentage, @RequestParam("advance_payment") int advance_payment, @RequestParam("userEmail") String userEmail, @RequestParam("hpId") int hpId) {
         try {
             PhysicalEventPayment physicalEventPayment = new PhysicalEventPayment();
             physicalEventPayment.setPhysical_event_id(event_id);
             physicalEventPayment.setPayment_date(LocalDate.now());
             physicalEventPayment.setPayment_time(LocalDateTime.now());
             physicalEventPayment.setAmount(advance_payment);
-            physicalEventPayment.setPayment_state(payment_state);
+            physicalEventPayment.setHp_id(hpId);
+            physicalEventPayment.setPayment_state("payments");
+            physicalEventPayment.setPayment_description("Book a hall for physical event");
+            physicalEventPayment.setEvent_state("Available");
             int payment_id = physicalEventService.physicalEventPaymentSave(physicalEventPayment);
             ResponseEntity<String> imageLinkResponse = service.uploadFile(file, userEmail);
             if (imageLinkResponse.getStatusCode() == HttpStatus.OK && imageLinkResponse.getBody() != null) {
