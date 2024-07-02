@@ -37,6 +37,7 @@ public class PhysicalEventImageUploadController {
             physicalEventPayment.setHp_id(hpId);
             physicalEventPayment.setPayment_state("payments");
             physicalEventPayment.setPayment_description("Book a hall for physical event");
+            physicalEventPayment.setEvent_state("Available");
             int payment_id = physicalEventService.physicalEventPaymentSave(physicalEventPayment);
             ResponseEntity<String> imageLinkResponse = service.uploadFile(file, userEmail);
             if (imageLinkResponse.getStatusCode() == HttpStatus.OK && imageLinkResponse.getBody() != null) {

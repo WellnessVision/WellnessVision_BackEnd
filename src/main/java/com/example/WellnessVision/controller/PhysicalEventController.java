@@ -2,7 +2,9 @@ package com.example.WellnessVision.controller;
 
 import com.example.WellnessVision.dto.EventID;
 import com.example.WellnessVision.dto.HallAvailability;
+import com.example.WellnessVision.dto.HealthProfessionalFineAmountDto;
 import com.example.WellnessVision.dto.PhysicalEvent;
+import com.example.WellnessVision.model.PhysicalEventBooking;
 import com.example.WellnessVision.service.PhysicalEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,7 @@ public class PhysicalEventController {
         String Available = "Available";
         String Maintain = "Maintain";
         String Unavailable = "Unavailable";
-        return service.getEventsByCapacityAndStatus(physicalEvent.getExpectedCapacity(),physicalEvent.getHallType(), Available, Maintain, Unavailable, physicalEvent.getDate(), physicalEvent.getStartTime(), physicalEvent.getEndTime(), physicalEvent.getEventTitle(), physicalEvent.getFinalEventType(), physicalEvent.getFinalDuration(), physicalEvent.getTicketPrice(), physicalEvent.getNullImage(), physicalEvent.getLanguage(), physicalEvent.getEventDescription(), physicalEvent.getHpId());
+        return service.getEventsByCapacityAndStatus(physicalEvent.getExpectedCapacity(),physicalEvent.getHallType(), Available, Maintain, Unavailable, physicalEvent.getDate(), physicalEvent.getStartTime(), physicalEvent.getEndTime(), physicalEvent.getEventTitle(), physicalEvent.getFinalEventType(), physicalEvent.getFinalDuration(), physicalEvent.getTicketPrice(), physicalEvent.getNullImage(), physicalEvent.getLanguage(), physicalEvent.getEventDescription(), physicalEvent.getHpId(), physicalEvent.getAccountNumber(), physicalEvent.getAccountOwnerName(), physicalEvent.getBranchName(), physicalEvent.getBankName());
     }
 
     @PutMapping("/physicalEvent")
@@ -34,13 +36,23 @@ public class PhysicalEventController {
     }
 
     @GetMapping("/viewPhysicalEvent")
-    public List<com.example.WellnessVision.model.PhysicalEvent> getPhysicalEventForHP(@RequestParam("hp_id") int hp_id) {
-        return (List<com.example.WellnessVision.model.PhysicalEvent>) service.getPhysicalEventForHP(hp_id);
+    public List<com.example.WellnessVision.model.PhysicalEvent> getPhysicalEventForHP(@RequestParam("hp_id") int hp_id, @RequestParam("eventState") String eventState) {
+        return (List<com.example.WellnessVision.model.PhysicalEvent>) service.getPhysicalEventForHP(hp_id, eventState);
     }
 
     @GetMapping("/viewOnePhysicalEventDetail")
     public com.example.WellnessVision.model.PhysicalEvent getOnePhysicalEventDetailForHP(@RequestParam("eventId") int event_id) {
         return (com.example.WellnessVision.model.PhysicalEvent) service.getOnePhysicalEventDetailForHP(event_id);
+    }
+
+    @GetMapping("/viewFineAmountForHP")
+    public HealthProfessionalFineAmountDto getFineAmountForHP(@RequestParam("eventId") int event_id) {
+        return service.getFineAmountForHP(event_id);
+    }
+
+    @GetMapping("/deletePhysicalEventForHP")
+    public void deletePhysicalEventForHP(@RequestParam("eventId") int event_id, @RequestParam("fineAmount") int fineAmount, @RequestParam("depositAmount") int depositAmount, @RequestParam("deleteReason") String deleteReason) {
+        service.deletePhysicalEventForHP(event_id, fineAmount, depositAmount, deleteReason);
     }
 
 }

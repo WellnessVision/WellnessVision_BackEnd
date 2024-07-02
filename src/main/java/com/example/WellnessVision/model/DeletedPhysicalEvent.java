@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 
 import javax.xml.crypto.Data;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
-public class PhysicalEvent {
+public class DeletedPhysicalEvent {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int event_id;
     private String hall_id;
     private String eventTitle;
@@ -29,13 +30,49 @@ public class PhysicalEvent {
     private String event_description;
     private int hp_id;
     private String event_state;
+    private LocalDateTime delete_time;
+    private String delete_reason;
+    private int fine_amount;
+    private int deposit_amount;
+    private int deposit_payment_id;
     private String accountNumber;
     private String accountOwnerName;
     private String branchName;
     private String bankName;
 
+    public DeletedPhysicalEvent() {
+    }
 
-    public PhysicalEvent() {
+    public DeletedPhysicalEvent(int event_id, String hall_id, String eventTitle, String finalEventType, LocalDate date, int startTime, int endTime, int finalDuration, int capacity, int ticketPrice, String eventImage, int hall_capacity, int total_hall_charge, double advance_percentage, int advance_payment, int payment_id, String language, String event_description, int hp_id, String event_state, LocalDateTime delete_time, String delete_reason, int fine_amount, int deposit_amount, int deposit_payment_id, String accountNumber, String accountOwnerName, String branchName, String bankName) {
+        this.event_id = event_id;
+        this.hall_id = hall_id;
+        this.eventTitle = eventTitle;
+        this.finalEventType = finalEventType;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.finalDuration = finalDuration;
+        this.capacity = capacity;
+        this.ticketPrice = ticketPrice;
+        this.eventImage = eventImage;
+        this.hall_capacity = hall_capacity;
+        this.total_hall_charge = total_hall_charge;
+        this.advance_percentage = advance_percentage;
+        this.advance_payment = advance_payment;
+        this.payment_id = payment_id;
+        this.language = language;
+        this.event_description = event_description;
+        this.hp_id = hp_id;
+        this.event_state = event_state;
+        this.delete_time = delete_time;
+        this.delete_reason = delete_reason;
+        this.fine_amount = fine_amount;
+        this.deposit_amount = deposit_amount;
+        this.deposit_payment_id = deposit_payment_id;
+        this.accountNumber = accountNumber;
+        this.accountOwnerName = accountOwnerName;
+        this.branchName = branchName;
+        this.bankName = bankName;
     }
 
     public int getEvent_id() {
@@ -196,6 +233,46 @@ public class PhysicalEvent {
 
     public void setEvent_state(String event_state) {
         this.event_state = event_state;
+    }
+
+    public LocalDateTime getDelete_time() {
+        return delete_time;
+    }
+
+    public void setDelete_time(LocalDateTime delete_time) {
+        this.delete_time = delete_time;
+    }
+
+    public String getDelete_reason() {
+        return delete_reason;
+    }
+
+    public void setDelete_reason(String delete_reason) {
+        this.delete_reason = delete_reason;
+    }
+
+    public int getFine_amount() {
+        return fine_amount;
+    }
+
+    public void setFine_amount(int fine_amount) {
+        this.fine_amount = fine_amount;
+    }
+
+    public int getDeposit_amount() {
+        return deposit_amount;
+    }
+
+    public void setDeposit_amount(int deposit_amount) {
+        this.deposit_amount = deposit_amount;
+    }
+
+    public int getDeposit_payment_id() {
+        return deposit_payment_id;
+    }
+
+    public void setDeposit_payment_id(int deposit_payment_id) {
+        this.deposit_payment_id = deposit_payment_id;
     }
 
     public String getAccountNumber() {

@@ -14,7 +14,6 @@ public class LoginService {
 
     public Optional<Login> login(String email, String password) {
         Optional<Login> optionalLogin = loginRepository.findByEmail(email);
-        System.out.println(PasswordHashingService.hashPassword("1Aa#1111"));
 
         if (optionalLogin.isPresent()) {
             Login login = optionalLogin.get();

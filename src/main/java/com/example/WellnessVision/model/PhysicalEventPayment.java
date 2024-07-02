@@ -20,6 +20,7 @@ public class PhysicalEventPayment {
     private String payment_state;
     private String payment_description;
     private int hp_id;
+    private String event_state;
 
     public PhysicalEventPayment() {
     }
@@ -86,5 +87,13 @@ public class PhysicalEventPayment {
 
     public void setPayment_description(String payment_description) {
         this.payment_description = payment_description;
+    }
+
+    public String getEvent_state() {
+        return event_state;
+    }
+
+    public void setEvent_state(String event_state) {
+        this.event_state = event_state;
     }
 }
