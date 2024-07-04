@@ -218,7 +218,8 @@ public class PhysicalEventService {
                         "/=, Advance payment : Rs." + physicalEvent.getAdvance_payment() + "/=, Fine amount : Rs." + fineAmount +  "/=, deposit amount : Rs." + depositAmount + "/= After deducting the fine " +
                         "from your advance payment, the remaining amount (deposit amount) will be credited to Account number : " + physicalEvent.getAccountNumber() + ", Account holder name : " + physicalEvent.getAccountOwnerName() +
                         ", Branch name : " + physicalEvent.getBranchName() + ", Bank name : " + physicalEvent.getBankName() + " bank account",
-                "Unread"
+                "Unread",
+                LocalDateTime.now()
         );
             notificationRepository.save(notification);
         }
@@ -230,12 +231,13 @@ public class PhysicalEventService {
                     "You deleted the EventId : " + physicalEvent.getEvent_id() + " event with less than two days left for the event. " +
                             "So your fine amount is equal to advance payment. Hall's full charge : Rs." + physicalEvent.getTotal_hall_charge() +
                             "/=, Advance payment : Rs." + physicalEvent.getAdvance_payment() + "/=, Fine amount : Rs." + fineAmount +  "/=",
-                    "Unread"
+                    "Unread",
+                    LocalDateTime.now()
             );
             notificationRepository.save(notification);
         }
 
-        List<PhysicalEventBooking> physicalEventBookings = physicalEventBookingRepository.getPhysicalEventBooking(event_id);
+        List<PhysicalEventBooking> physicalEventBookings = physicalEventBookingRepository.getPhysicalEventBooking(event_id, "Booking");
         for (PhysicalEventBooking physicalEventBooking : physicalEventBookings) {
             physicalEventBookingRepository.updateUserPhysicalEventBookingEventState(physicalEventBooking.getBookingId(), "Unavailable");
 
@@ -255,13 +257,16 @@ public class PhysicalEventService {
                             + physicalEvent.getTicketPrice() + "/= will be credited to Account number : " + physicalEventBooking.getAccountNumber()
                             + ", Account holder name : " + physicalEventBooking.getAccountOwnerName() +
                             ", Branch name : " + physicalEventBooking.getBranchName() + ", Bank name : " + physicalEventBooking.getBankName() + " bank account",
-                    "Unread"
+                    "Unread",
+                    LocalDateTime.now()
             );
             notificationRepository.save(notification);
         }
 
     }
 
-
+    public void updatePhysicalEventMoneyReceiptsDetailsForHP(int event_id, String account_number, String account_owner_name, String branch_name, String bank_name) {
+        repository.updatePhysicalEventMoneyReceiptsDetailsForHP(event_id, account_number, account_owner_name, branch_name, bank_name);
+    }
 
 }

@@ -50,9 +50,15 @@ public class PhysicalEventController {
         return service.getFineAmountForHP(event_id);
     }
 
-    @GetMapping("/deletePhysicalEventForHP")
+    @PutMapping("/deletePhysicalEventForHP")
     public void deletePhysicalEventForHP(@RequestParam("eventId") int event_id, @RequestParam("fineAmount") int fineAmount, @RequestParam("depositAmount") int depositAmount, @RequestParam("deleteReason") String deleteReason) {
         service.deletePhysicalEventForHP(event_id, fineAmount, depositAmount, deleteReason);
+    }
+
+    @PutMapping("/updatePhysicalEventMoneyReceiptsDetailsForHP")
+    public void updatePhysicalEventMoneyReceiptsDetailsForHP(@RequestParam("eventId") int event_id, @RequestParam("accountNumber") String account_number, @RequestParam("accountOwnerName") String account_owner_name, @RequestParam("branchName") String branch_name, @RequestParam("bankName") String bank_name)
+    {
+        service.updatePhysicalEventMoneyReceiptsDetailsForHP(event_id, account_number, account_owner_name, branch_name, bank_name);
     }
 
 }

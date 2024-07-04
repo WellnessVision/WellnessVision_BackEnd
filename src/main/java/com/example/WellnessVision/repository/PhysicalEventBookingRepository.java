@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface PhysicalEventBookingRepository extends JpaRepository<PhysicalEventBooking, Integer> {
 
-    @Query(value = "SELECT * FROM physical_event_booking WHERE event_id = ?1", nativeQuery = true)
-    List<PhysicalEventBooking> getPhysicalEventBooking(int event_id);
+    @Query(value = "SELECT * FROM physical_event_booking WHERE event_id = ?1 AND booking_state = ?2", nativeQuery = true)
+    List<PhysicalEventBooking> getPhysicalEventBooking(int event_id, String booking_state);
 
     @Modifying
     @Transactional
