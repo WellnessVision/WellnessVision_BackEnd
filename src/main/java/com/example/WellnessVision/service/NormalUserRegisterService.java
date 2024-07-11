@@ -18,7 +18,7 @@ public class NormalUserRegisterService {
         normalUserRegisterRepository.save(normalUser);
     }
 
-    public Optional<NormalUser> getUserDetails(int user_id){
-        return normalUserRegisterRepository.findUserDetailsByUser_id(user_id);
+    public NormalUser getUserDetails(int user_id){
+        return normalUserRegisterRepository.getOneUserDetails(user_id);
     }
 }

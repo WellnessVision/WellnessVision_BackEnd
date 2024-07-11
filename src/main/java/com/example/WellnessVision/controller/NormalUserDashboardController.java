@@ -22,7 +22,7 @@ public class NormalUserDashboardController {
     private NormalUserDashboardService normalUserDashboardService;
 
     @GetMapping("/getNormalUserDetails")
-    public Optional<NormalUser> getNormalUserDetails(@RequestParam("userId") int user_id){
+    public NormalUser getNormalUserDetails(@RequestParam("userId") int user_id){
 
         return normalUserRegisterService.getUserDetails(user_id);
     }
