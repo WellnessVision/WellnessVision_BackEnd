@@ -30,4 +30,5 @@ public interface PhysicalEventBookingRepository extends JpaRepository<PhysicalEv
     @Transactional
     @Query(value = "UPDATE physical_event SET event_state = ?2 WHERE event_id = ?1", nativeQuery = true)
     void closeEventBookingForHp(int eventId,String eventState);
+  
 }
