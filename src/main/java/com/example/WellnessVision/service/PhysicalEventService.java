@@ -2,6 +2,7 @@ package com.example.WellnessVision.service;
 
 import com.example.WellnessVision.dto.HallAvailability;
 import com.example.WellnessVision.dto.HealthProfessionalFineAmountDto;
+import com.example.WellnessVision.dto.ViewPhysicalEventParticipationDetails;
 import com.example.WellnessVision.model.*;
 import com.example.WellnessVision.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,15 @@ public class PhysicalEventService {
     private final DeletedPhysicalEventRepository deletedPhysicalEventRepository;
     private final PhysicalEventBookingPaymentRepository physicalEventBookingPaymentRepository;
     private final NotificationRepository notificationRepository;
+    private final NormalUserRegisterRepository normalUserRegisterRepository;
 
-    public PhysicalEventService(PhysicalEventOrderRepository orderRepository, PhysicalEventPaymentRepository physicalEventPaymentRepository, DeletedPhysicalEventRepository deletedPhysicalEventRepository, PhysicalEventBookingPaymentRepository physicalEventBookingPaymentRepository, NotificationRepository notificationRepository) {
+    public PhysicalEventService(PhysicalEventOrderRepository orderRepository, PhysicalEventPaymentRepository physicalEventPaymentRepository, DeletedPhysicalEventRepository deletedPhysicalEventRepository, PhysicalEventBookingPaymentRepository physicalEventBookingPaymentRepository, NotificationRepository notificationRepository, NormalUserRegisterRepository normalUserRegisterRepository) {
         order_repository = orderRepository;
         this.physicalEventPaymentRepository = physicalEventPaymentRepository;
         this.deletedPhysicalEventRepository = deletedPhysicalEventRepository;
         this.physicalEventBookingPaymentRepository = physicalEventBookingPaymentRepository;
         this.notificationRepository = notificationRepository;
+        this.normalUserRegisterRepository = normalUserRegisterRepository;
     }
 
     public HallAvailability getEventsByCapacityAndStatus(int capacity, String hall_type, String Available,String Maintain,String Unavailable, LocalDate date, int start_time, int end_time, String event_title, String event_type, int duration, int ticket_price, String eventImage, String language, String event_description, int hpId, String accountNumber, String ownerName, String branchName, String bankName) throws IOException {
@@ -268,5 +271,47 @@ public class PhysicalEventService {
     public void updatePhysicalEventMoneyReceiptsDetailsForHP(int event_id, String account_number, String account_owner_name, String branch_name, String bank_name) {
         repository.updatePhysicalEventMoneyReceiptsDetailsForHP(event_id, account_number, account_owner_name, branch_name, bank_name);
     }
+
+    public List<ViewPhysicalEventParticipationDetails> viewPhysicalEventParticipationDetails(int event_id, String searchCode) {
+        String searchCodeModify = searchCode + "%";
+        List<PhysicalEventBooking> physicalEventBookings = physicalEventBookingRepository.viewPhysicalEventParticipationDetails(event_id, searchCodeModify);
+        List<ViewPhysicalEventParticipationDetails> viewPhysicalEventParticipationDetailsList = new ArrayList<>();
+        for (PhysicalEventBooking physicalEventBooking : physicalEventBookings) {
+            NormalUser normalUser = normalUserRegisterRepository.getOneUserDetails(physicalEventBooking.getUserId());
+            ViewPhysicalEventParticipationDetails viewPhysicalEventParticipationDetails = new ViewPhysicalEventParticipationDetails(
+                    normalUser.getUser_id(),
+                    normalUser.getEmail(),
+                    normalUser.getPhone(),
+                    normalUser.getDistrict(),
+                    normalUser.getCity(),
+                    normalUser.getAddress(),
+                    normalUser.getAddress2(),
+                    normalUser.getFirstName(),
+                    normalUser.getLastName(),
+                    normalUser.getPreferences(),
+                    normalUser.getProvince(),
+                    normalUser.getProfilePic(),
+                    physicalEventBooking.getBookingId(),
+                    physicalEventBooking.getBookingState(),
+                    physicalEventBooking.getParticipantId(),
+                    physicalEventBooking.getParticipantState()
+            );
+            viewPhysicalEventParticipationDetailsList.add(viewPhysicalEventParticipationDetails);
+        }
+
+        return viewPhysicalEventParticipationDetailsList;
+    }
+
+    public void updatePhysicalEventParticipationState(int bookingId, String participantState) {
+        physicalEventBookingRepository.updatePhysicalEventParticipationState(bookingId, participantState);
+    }
+    public void closeEventBookingForHp(int eventId) {
+        physicalEventBookingRepository.closeEventBookingForHp(eventId, "Previous");
+    }
+
+    public NormalUser bookingParticipationUserDetailsForHp(int userId) {
+        return normalUserRegisterRepository.getOneUserDetails(userId);
+    }
+
 
 }
