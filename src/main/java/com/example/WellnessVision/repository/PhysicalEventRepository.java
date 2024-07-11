@@ -33,4 +33,5 @@ public interface PhysicalEventRepository extends JpaRepository<Hall, String> {
 
     Optional<Hall> findById(String hallId);
 
+
 }
