@@ -31,6 +31,12 @@ public interface PhysicalEventRepository extends JpaRepository<Hall, String> {
     void UploadEventImage(String event_image, int event_id,  int hall_capacity, int total_hall_charge, double advance_percentage, int advance_payment, int payment_id);
 
 
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE physical_event SET account_number = ?2, account_owner_name = ?3, branch_name = ?4, bank_name = ?5 WHERE event_id = ?1", nativeQuery = true)
+    void updatePhysicalEventMoneyReceiptsDetailsForHP(int event_id, String account_number,  String account_owner_name, String branch_name, String bank_name);
+
+
     Optional<Hall> findById(String hallId);
 
 

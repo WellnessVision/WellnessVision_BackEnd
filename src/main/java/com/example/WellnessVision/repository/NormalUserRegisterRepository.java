@@ -12,6 +12,8 @@ public interface NormalUserRegisterRepository extends JpaRepository<NormalUser, 
     Optional<NormalUser> findByEmail(String email);
 
     @Query(value = "SELECT * FROM normal_user WHERE user_id = ?1", nativeQuery = true)
+    NormalUser getOneUserDetails(int user_id);
+
     Optional<NormalUser> findUserDetailsByUser_id(int user_id);
 
 }

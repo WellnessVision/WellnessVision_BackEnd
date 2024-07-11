@@ -38,6 +38,7 @@ public class PhysicalEvent {
     private String accountOwnerName;
     private String branchName;
     private String bankName;
+    private int ticketBookingCount;
 
 
     public PhysicalEvent() {
@@ -233,5 +234,13 @@ public class PhysicalEvent {
 
     public void setBankName(String bankName) {
         this.bankName = bankName;
+    }
+
+    public int getTicketBookingCount() {
+        return ticketBookingCount;
+    }
+
+    public void setTicketBookingCount(int ticketBookingCount) {
+        this.ticketBookingCount = ticketBookingCount;
     }
 }
