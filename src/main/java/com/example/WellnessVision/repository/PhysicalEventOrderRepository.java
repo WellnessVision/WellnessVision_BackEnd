@@ -17,5 +17,4 @@ public interface PhysicalEventOrderRepository extends JpaRepository<PhysicalEven
     @Query(value = "SELECT * FROM physical_event WHERE event_id = ?1", nativeQuery = true)
     PhysicalEvent getEventDate(int event_id);
 
-
 }

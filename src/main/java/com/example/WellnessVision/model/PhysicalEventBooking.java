@@ -1,9 +1,6 @@
 package com.example.WellnessVision.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 @Getter
@@ -13,7 +10,12 @@ public class PhysicalEventBooking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int bookingId;
     private int userId;
-    private int eventId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    private PhysicalEvent physicalEvent;
+
+
     private String bookingState;
     private String eventState;
     private String participantId;
@@ -26,10 +28,10 @@ public class PhysicalEventBooking {
     public PhysicalEventBooking() {
     }
 
-    public PhysicalEventBooking(int bookingId, int userId, int eventId, String bookingState, String eventState, String participantId, String participantState, String accountNumber, String accountOwnerName, String branchName, String bankName) {
+    public PhysicalEventBooking(int bookingId, int userId, String bookingState, String eventState, String participantId, String participantState, String accountNumber, String accountOwnerName, String branchName, String bankName) {
         this.bookingId = bookingId;
         this.userId = userId;
-        this.eventId = eventId;
+//        this.eventId = eventId;
         this.bookingState = bookingState;
         this.eventState = eventState;
         this.participantId = participantId;
@@ -48,9 +50,9 @@ public class PhysicalEventBooking {
         this.userId = userId;
     }
 
-    public void setEventId(int eventId) {
-        this.eventId = eventId;
-    }
+//    public void setEventId(int eventId) {
+//        this.eventId = eventId;
+//    }
 
 
     public void setEventState(String eventState) {
