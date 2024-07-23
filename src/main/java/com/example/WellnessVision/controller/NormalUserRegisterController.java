@@ -43,6 +43,7 @@ public class NormalUserRegisterController {
             @RequestParam("address2") String address2,
             @RequestParam("city") String city,
             @RequestParam("province") String province,
+            @RequestParam("zip") String zip,
             @RequestParam("password") String password,
             @RequestParam("profilePic") MultipartFile profilePic
             )
@@ -67,7 +68,7 @@ public class NormalUserRegisterController {
             profilePicLink = certificateImageLinkResponse.getBody();
         }
 
-        NormalUser normalUser = new NormalUser(user_id, user_type, email, phone,district, city, address, address2,  firstName, lastName, preferences, province, hashPassword, profilePicLink);
+        NormalUser normalUser = new NormalUser(user_id, user_type, email, phone,district, city, address, address2,  firstName, lastName, preferences, province, zip, hashPassword, profilePicLink);
 
         normalUserRegisterService.register(normalUser);
         return "Registration successful!";

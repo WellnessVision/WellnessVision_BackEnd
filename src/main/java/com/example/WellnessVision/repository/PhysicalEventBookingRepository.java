@@ -30,5 +30,21 @@ public interface PhysicalEventBookingRepository extends JpaRepository<PhysicalEv
     @Transactional
     @Query(value = "UPDATE physical_event SET event_state = ?2 WHERE event_id = ?1", nativeQuery = true)
     void closeEventBookingForHp(int eventId,String eventState);
+
+    @Query(value = "SELECT * FROM physical_event_booking WHERE user_id = ?1 AND event_id = ?2 AND booking_state = ?3", nativeQuery = true)
+    PhysicalEventBooking getBookingDetailsBookedUpcomingPhysicalEventsForUsers(int userId, int eventId, String bookingState);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE physical_event_booking SET account_number = ?2, account_owner_name = ?3, branch_name = ?4, bank_name = ?5 WHERE booking_id = ?1", nativeQuery = true)
+    void updateOnePhysicalEventMoneyReceiptsDetailsForNU(int booking_id, String account_number, String account_owner_name, String branch_name, String bank_name);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE physical_event_booking SET booking_state = ?2 WHERE booking_id = ?1", nativeQuery = true)
+    void updateUserPhysicalEventBookingState(int booking_id, String booking_state);
+
+    @Query(value = "SELECT * FROM physical_event_booking WHERE booking_id = ?1", nativeQuery = true)
+    PhysicalEventBooking PhysicalEventsBookingDetailsForUsers(int booking_id);
   
 }
