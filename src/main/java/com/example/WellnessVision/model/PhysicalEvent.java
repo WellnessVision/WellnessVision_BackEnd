@@ -12,8 +12,6 @@ public class PhysicalEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int event_id;
-    @OneToMany(mappedBy = "physicalEvent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PhysicalEventBooking> physicalEventBookingList = new ArrayList<>();
     private String hall_id;
     private String eventTitle;
     private String finalEventType;
@@ -39,7 +37,7 @@ public class PhysicalEvent {
     private String branchName;
     private String bankName;
     private int ticketBookingCount;
-
+    private String paymentState = "NotPaid";
 
     public PhysicalEvent() {
     }
@@ -242,5 +240,13 @@ public class PhysicalEvent {
 
     public void setTicketBookingCount(int ticketBookingCount) {
         this.ticketBookingCount = ticketBookingCount;
+    }
+
+    public String getPaymentState() {
+        return paymentState;
+    }
+
+    public void setPaymentState(String paymentState) {
+        this.paymentState = paymentState;
     }
 }

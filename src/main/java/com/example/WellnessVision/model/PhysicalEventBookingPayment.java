@@ -23,6 +23,15 @@ public class PhysicalEventBookingPayment {
     public PhysicalEventBookingPayment() {
     }
 
+    public PhysicalEventBookingPayment(int bookingId, int userId, LocalDateTime paymentDate, int amount, String paymentState, String paymentDescription) {
+        this.bookingId = bookingId;
+        this.userId = userId;
+        this.paymentDate = paymentDate;
+        this.amount = amount;
+        this.paymentState = paymentState;
+        this.paymentDescription = paymentDescription;
+    }
+
     public int getPaymentId() {
         return paymentId;
     }

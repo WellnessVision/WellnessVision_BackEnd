@@ -5,10 +5,8 @@ import com.example.WellnessVision.dto.HealthProfessionalRegistrationRequestDto;
 import com.example.WellnessVision.model.HealthProfessional;
 import com.example.WellnessVision.model.HealthProfessionalRegistrationRequest;
 import com.example.WellnessVision.model.Login;
-import com.example.WellnessVision.service.FileUploadService;
-import com.example.WellnessVision.service.HealthProfessionalRegistrationRequestService;
-import com.example.WellnessVision.service.LoginService;
-import com.example.WellnessVision.service.PasswordHashingService;
+import com.example.WellnessVision.model.Notification;
+import com.example.WellnessVision.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +30,9 @@ public class HealthProfessionalRegistrationRequestController {
 
     @Autowired
     private HealthProfessionalRegistrationRequestService healthProfessionalRegistrationRequestService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @PostMapping("/healthProfessionalRegistrationRequest")
     public void healthProfessionalRegistrationRequestSave(
@@ -141,6 +142,16 @@ public class HealthProfessionalRegistrationRequestController {
 
         healthProfessionalRegistrationRequestService.healthProfessionalSave(healthProfessional);
         healthProfessionalRegistrationRequestService.deleteHealthProfessionalRegistrationRequest(requestId);
+
+        Notification notification = new Notification(
+                login.getId(),
+                "Welcome to WellnessVision",
+                "Congratulation!, Your registration request accepted by WellnessVision administration and now you can start your new journey with WellnessVision. " +
+                        "Here you can organize physical and online events, manage appointment schedules, and publish articles...",
+                "Unread",
+                LocalDateTime.now()
+        );
+        notificationService.createNewNotificationForAllUsers(notification);
 
     }
 

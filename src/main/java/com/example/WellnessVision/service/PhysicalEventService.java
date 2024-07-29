@@ -31,7 +31,7 @@ public class PhysicalEventService {
     private final NormalUserRegisterRepository normalUserRegisterRepository;
 
     public PhysicalEventService(PhysicalEventOrderRepository orderRepository, PhysicalEventPaymentRepository physicalEventPaymentRepository, DeletedPhysicalEventRepository deletedPhysicalEventRepository, PhysicalEventBookingPaymentRepository physicalEventBookingPaymentRepository, NotificationRepository notificationRepository, NormalUserRegisterRepository normalUserRegisterRepository) {
-        order_repository = orderRepository;
+        this.order_repository = orderRepository;
         this.physicalEventPaymentRepository = physicalEventPaymentRepository;
         this.deletedPhysicalEventRepository = deletedPhysicalEventRepository;
         this.physicalEventBookingPaymentRepository = physicalEventBookingPaymentRepository;
@@ -115,8 +115,9 @@ public class PhysicalEventService {
         return savedPhysicalEventPayment.getPayment_id();
     }
 
-    public List<PhysicalEvent> getPhysicalEventForHP(int hp_id, String eventState) {
-        return order_repository.getPhysicalEventForHP(hp_id, eventState);
+    public List<PhysicalEvent> getPhysicalEventForHP(int hp_id, String eventState, String searchCode) {
+        String searchCodeModify = searchCode + "%";
+        return order_repository.getPhysicalEventForHP(hp_id, eventState, searchCodeModify);
     }
 
     public PhysicalEvent getOnePhysicalEventDetailForHP(int event_id) {
@@ -210,14 +211,14 @@ public class PhysicalEventService {
 
         deletedPhysicalEventRepository.save(deletedPhysicalEvent);
 
-        order_repository.deleteById(physicalEvent.getEvent_id());
+        order_repository.deletePhysicalEvent(event_id);
 
         if(depositAmount > 0){
         Notification notification = new Notification(
                 physicalEvent.getHp_id(),
                 "Delete Physical Event",
-                "You deleted the EventId : " + physicalEvent.getEvent_id() + " event two days before the event date. " +
-                        "So your fine amount is 5% of the hall's full charge. Hall's full charge : Rs." + physicalEvent.getTotal_hall_charge() +
+                "You deleted the EventId : " + physicalEvent.getEvent_id() + " event two days before the event date. " + "Reason : " + deleteReason +
+                        ". So your fine amount is 5% of the hall's full charge. Hall's full charge : Rs." + physicalEvent.getTotal_hall_charge() +
                         "/=, Advance payment : Rs." + physicalEvent.getAdvance_payment() + "/=, Fine amount : Rs." + fineAmount +  "/=, deposit amount : Rs." + depositAmount + "/= After deducting the fine " +
                         "from your advance payment, the remaining amount (deposit amount) will be credited to Account number : " + physicalEvent.getAccountNumber() + ", Account holder name : " + physicalEvent.getAccountOwnerName() +
                         ", Branch name : " + physicalEvent.getBranchName() + ", Bank name : " + physicalEvent.getBankName() + " bank account",
@@ -231,8 +232,8 @@ public class PhysicalEventService {
             Notification notification = new Notification(
                     physicalEvent.getHp_id(),
                     "Delete Physical Event",
-                    "You deleted the EventId : " + physicalEvent.getEvent_id() + " event with less than two days left for the event. " +
-                            "So your fine amount is equal to advance payment. Hall's full charge : Rs." + physicalEvent.getTotal_hall_charge() +
+                    "You deleted the EventId : " + physicalEvent.getEvent_id() + " event with less than two days left for the event. " + "Reason : " + deleteReason +
+                            ". So your fine amount is equal to advance payment. Hall's full charge : Rs." + physicalEvent.getTotal_hall_charge() +
                             "/=, Advance payment : Rs." + physicalEvent.getAdvance_payment() + "/=, Fine amount : Rs." + fineAmount +  "/=",
                     "Unread",
                     LocalDateTime.now()
@@ -256,7 +257,7 @@ public class PhysicalEventService {
             Notification notification = new Notification(
                     physicalEventBooking.getUserId(),
                     "Physical Event was deleted",
-                    "EventId : " + physicalEvent.getEvent_id() + " was deleted. So your ticket payment : "
+                    "EventId : " + physicalEvent.getEvent_id() + " was deleted. " + "Reason : " + deleteReason + ". So your ticket payment : "
                             + physicalEvent.getTicketPrice() + "/= will be credited to Account number : " + physicalEventBooking.getAccountNumber()
                             + ", Account holder name : " + physicalEventBooking.getAccountOwnerName() +
                             ", Branch name : " + physicalEventBooking.getBranchName() + ", Bank name : " + physicalEventBooking.getBankName() + " bank account",
@@ -265,6 +266,8 @@ public class PhysicalEventService {
             );
             notificationRepository.save(notification);
         }
+
+        physicalEventBookingRepository.changeEventStateToForDeletePhysicalEvent(event_id, "Unavailable");
 
     }
 
@@ -307,6 +310,7 @@ public class PhysicalEventService {
     }
     public void closeEventBookingForHp(int eventId) {
         physicalEventBookingRepository.closeEventBookingForHp(eventId, "Previous");
+        physicalEventBookingRepository.changeEventStateToForDeletePhysicalEvent(eventId,"Previous");
     }
 
     public NormalUser bookingParticipationUserDetailsForHp(int userId) {

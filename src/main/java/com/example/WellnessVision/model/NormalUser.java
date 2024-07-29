@@ -21,15 +21,16 @@ public class NormalUser {
     private String lastName;
     private String preferences;
     private String province;
+    private String zip;
     private String password;
-
     private String profilePic;
+
 
 
     public NormalUser(){
     }
 
-    public NormalUser(int user_id, String user_type, String email, String phone, String district, String city, String address, String address2, String firstName, String lastName, String preferences, String province, String password, String profilePic) {
+    public NormalUser(int user_id, String user_type, String email, String phone, String district, String city, String address, String address2, String firstName, String lastName, String preferences, String province, String zip, String password, String profilePic) {
         this.user_id = user_id;
         this.user_type = user_type;
         this.email = email;
@@ -42,6 +43,7 @@ public class NormalUser {
         this.lastName = lastName;
         this.preferences = preferences;
         this.province = province;
+        this.zip = zip;
         this.password = password;
         this.profilePic = profilePic;
     }
@@ -141,6 +143,14 @@ public class NormalUser {
 
     public void setProvince(String province) {
         this.province = province;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
     }
 
     public String getPassword() {
