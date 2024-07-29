@@ -33,12 +33,13 @@ public class NormalUserPhysicalEventService {
         order_repository = orderRepository;
     }
 
-    public List<PhysicalEvent> getUpcomingPhysicalEventsForUsers(String eventState){
-        return normalUserGetPhysicalEventsRepository.getUpcomingPhysicalEventsForUsers(eventState);
+    public List<PhysicalEvent> getUpcomingPhysicalEventsForUsers(String eventState, String searchCode){
+        String searchCodeModify = searchCode + "%";
+        return normalUserGetPhysicalEventsRepository.getUpcomingPhysicalEventsForUsers(eventState, searchCodeModify);
     }
 
     public int checkBookingStateOfOnePhysicalEventDetailForUser(int event_id, int user_id){
-        return normalUserGetPhysicalEventsRepository.checkBookingStateOfOnePhysicalEventDetailForUser(event_id, user_id);
+        return normalUserGetPhysicalEventsRepository.checkBookingStateOfOnePhysicalEventDetailForUser(event_id, user_id, "Booking");
     }
 
 //    public List<PhysicalEvent> getAllBookedPhysicalEventsByUserId(int user_id){
@@ -55,7 +56,7 @@ public class NormalUserPhysicalEventService {
 
     public void userPhysicalEventBooking(int event_id, int user_id, int ticketPrice, String account_number, String account_owner_name, String branch_name, String bank_name){
 
-        String participantId = "7845812";
+        String participantId = "P/" + RandomStringGeneratorService.generateRandomString(7);
 
         PhysicalEventBooking physicalEventBooking = new PhysicalEventBooking(
                 event_id,
@@ -106,49 +107,53 @@ public class NormalUserPhysicalEventService {
          physicalEventBookingRepository.updateOnePhysicalEventMoneyReceiptsDetailsForNU(booking_id, account_number, account_owner_name, branch_name, bank_name);
     }
 
-    public NormalUserFineAmountDto getFineAmountForNU(int event_id) {
-        PhysicalEvent physicalEvent =  order_repository.getEventDate(event_id);
-        LocalDate eventDate =  physicalEvent.getDate();
-        LocalDate twoDaysBeforeDate = eventDate.minusDays(2);
-        LocalDate today = LocalDate.now();
-        int ticketPrice = physicalEvent.getTicketPrice();
-        int fineAmount;
-        double finePercentage;
-        String fineAmountDetails;
-        int depositAmount = 0;
-        String twoDaysBeforeState;
-        if(today.isBefore(twoDaysBeforeDate)){
-            twoDaysBeforeState = "Yes";
-            finePercentage = 15.00;
-            fineAmount = (int) (ticketPrice * 0.15);
-            depositAmount = ticketPrice - fineAmount;
-            fineAmountDetails = "You are deleting the event booking two days before the event date. " +
-                    "So your fine amount is 15% of the full ticket price. After deducting the fine " +
-                    "from your booking payment, the remaining amount will be credited to your bank account.";
+    public NormalUserFineAmountDto getFineAmountForNU(int event_id, int bookingId) {
+        int UsersCheckParticipantState = physicalEventBookingRepository.PhysicalEventsBookingDetailsForUsersCheckParticipantState(bookingId, "NotParticipate");
+        PhysicalEvent physicalEvent = order_repository.getEventDate(event_id);
+        if(UsersCheckParticipantState == 1 && Objects.equals(physicalEvent.getEvent_state(), "Upcoming")) {
+            LocalDate eventDate = physicalEvent.getDate();
+            LocalDate twoDaysBeforeDate = eventDate.minusDays(2);
+            LocalDate today = LocalDate.now();
+            int ticketPrice = physicalEvent.getTicketPrice();
+            int fineAmount;
+            double finePercentage;
+            String fineAmountDetails;
+            int depositAmount = 0;
+            String twoDaysBeforeState;
+            if (today.isBefore(twoDaysBeforeDate)) {
+                twoDaysBeforeState = "Yes";
+                finePercentage = 15.00;
+                fineAmount = (int) (ticketPrice * 0.15);
+                depositAmount = ticketPrice - fineAmount;
+                fineAmountDetails = "You are deleting the event booking two days before the event date. " +
+                        "So your fine amount is 15% of the full ticket price. After deducting the fine " +
+                        "from your booking payment, the remaining amount will be credited to your bank account.";
+            } else {
+                twoDaysBeforeState = "No";
+                finePercentage = 50.00;
+                fineAmount = (int) (ticketPrice * 0.50);
+                depositAmount = ticketPrice - fineAmount;
+                fineAmountDetails = "You are deleting the event booking with less than two days left for the event. " +
+                        "So your fine amount is 50% of the full ticket price. After deducting the fine " +
+                        "from your booking payment, the remaining amount will be credited to your bank account.";
+            }
+
+            NormalUserFineAmountDto normalUserFineAmountDto = new NormalUserFineAmountDto(
+                    today,
+                    eventDate,
+                    twoDaysBeforeDate,
+                    ticketPrice,
+                    fineAmount,
+                    depositAmount,
+                    finePercentage,
+                    fineAmountDetails,
+                    twoDaysBeforeState
+            );
+
+            return normalUserFineAmountDto;
         }else {
-            twoDaysBeforeState = "No";
-            finePercentage = 50.00;
-            fineAmount = (int) (ticketPrice * 0.50);
-            depositAmount = ticketPrice - fineAmount;
-            fineAmountDetails = "You are deleting the event booking with less than two days left for the event. " +
-                    "So your fine amount is 50% of the full ticket price. After deducting the fine " +
-                    "from your booking payment, the remaining amount will be credited to your bank account.";
+           return null;
         }
-
-        NormalUserFineAmountDto normalUserFineAmountDto = new NormalUserFineAmountDto(
-                today,
-                eventDate,
-                twoDaysBeforeDate,
-                ticketPrice,
-                fineAmount,
-                depositAmount,
-                finePercentage,
-                fineAmountDetails,
-                twoDaysBeforeState
-        );
-
-        return normalUserFineAmountDto;
-
     }
 
     public void deletePhysicalEventBookingForNU(int event_id, int user_id, int booking_id, int fineAmount, int depositAmount, String twoDaysBeforeState){

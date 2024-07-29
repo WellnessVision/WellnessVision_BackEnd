@@ -34,8 +34,8 @@ public class PhysicalEventController {
     }
 
     @GetMapping("/viewPhysicalEvent")
-    public List<com.example.WellnessVision.model.PhysicalEvent> getPhysicalEventForHP(@RequestParam("hp_id") int hp_id, @RequestParam("eventState") String eventState) {
-        return (List<com.example.WellnessVision.model.PhysicalEvent>) service.getPhysicalEventForHP(hp_id, eventState);
+    public List<com.example.WellnessVision.model.PhysicalEvent> getPhysicalEventForHP(@RequestParam("hp_id") int hp_id, @RequestParam("eventState") String eventState, @RequestParam("searchCode") String searchCode) {
+        return (List<com.example.WellnessVision.model.PhysicalEvent>) service.getPhysicalEventForHP(hp_id, eventState, searchCode);
     }
 
     @GetMapping("/viewOnePhysicalEventDetail")

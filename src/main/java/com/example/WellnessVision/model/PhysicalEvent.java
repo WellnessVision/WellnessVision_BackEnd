@@ -37,7 +37,7 @@ public class PhysicalEvent {
     private String branchName;
     private String bankName;
     private int ticketBookingCount;
-
+    private String paymentState = "NotPaid";
 
     public PhysicalEvent() {
     }
@@ -240,5 +240,13 @@ public class PhysicalEvent {
 
     public void setTicketBookingCount(int ticketBookingCount) {
         this.ticketBookingCount = ticketBookingCount;
+    }
+
+    public String getPaymentState() {
+        return paymentState;
+    }
+
+    public void setPaymentState(String paymentState) {
+        this.paymentState = paymentState;
     }
 }

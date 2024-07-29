@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin("http://localhost:5173")
@@ -33,8 +34,8 @@ public class NormalUserPhysicalEventController {
     }
 
     @GetMapping("/getUpcomingPhysicalEventsForUsers")
-    public List<PhysicalEvent> getUpcomingPhysicalEventsForUsers(@RequestParam("eventState") String eventState) {
-        return (List<PhysicalEvent>) normalUserPhysicalEventService.getUpcomingPhysicalEventsForUsers(eventState);
+    public List<PhysicalEvent> getUpcomingPhysicalEventsForUsers(@RequestParam("eventState") String eventState, @RequestParam("searchCode") String searchCode) {
+        return (List<PhysicalEvent>) normalUserPhysicalEventService.getUpcomingPhysicalEventsForUsers(eventState, searchCode);
     }
 
     @GetMapping("/checkBookingStateOfOnePhysicalEventDetailForUser")
@@ -56,11 +57,14 @@ public class NormalUserPhysicalEventController {
     public String userPhysicalEventTemporaryBooking(@RequestParam("eventId") int eventId)
     {
         PhysicalEvent checkPhysicalEvent = physicalEventService.getOnePhysicalEventDetailForHP(eventId);
-        if(checkPhysicalEvent.getHall_capacity() > checkPhysicalEvent.getTicketBookingCount()){
+        if(checkPhysicalEvent.getHall_capacity() > checkPhysicalEvent.getTicketBookingCount() && Objects.equals(checkPhysicalEvent.getEvent_state(), "Upcoming")){
             normalUserPhysicalEventService.temporaryBookingPhysicalEventTicket(eventId);
             return "Booked";
+        }else if(Objects.equals(checkPhysicalEvent.getEvent_state(), "Previous")){
+            return "CloseBooking";
+        }else {
+            return "NotBooked";
         }
-        return "NotBooked";
     }
 
     @PutMapping("/userPhysicalEventTemporaryBookingCancel")
@@ -93,8 +97,8 @@ public class NormalUserPhysicalEventController {
     }
 
     @GetMapping("/getFineAmountForNU")
-    public NormalUserFineAmountDto getFineAmountForNU(@RequestParam("eventId") int eventId) {
-        return normalUserPhysicalEventService.getFineAmountForNU(eventId);
+    public NormalUserFineAmountDto getFineAmountForNU(@RequestParam("eventId") int eventId, @RequestParam("bookingId") int bookingId) {
+        return normalUserPhysicalEventService.getFineAmountForNU(eventId, bookingId);
     }
 
     @PutMapping("/deletePhysicalEventBookingForNU")

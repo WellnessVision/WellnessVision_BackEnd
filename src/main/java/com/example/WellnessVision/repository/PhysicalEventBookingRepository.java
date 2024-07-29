@@ -46,5 +46,13 @@ public interface PhysicalEventBookingRepository extends JpaRepository<PhysicalEv
 
     @Query(value = "SELECT * FROM physical_event_booking WHERE booking_id = ?1", nativeQuery = true)
     PhysicalEventBooking PhysicalEventsBookingDetailsForUsers(int booking_id);
+
+    @Query(value = "SELECT COUNT(*) AS participantState FROM physical_event_booking WHERE booking_id = ?1 AND participant_state = ?2", nativeQuery = true)
+    Integer PhysicalEventsBookingDetailsForUsersCheckParticipantState(int booking_id, String participantState);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE physical_event_booking SET event_state = ?2 WHERE event_id = ?1", nativeQuery = true)
+    void changeEventStateToForDeletePhysicalEvent(int eventId, String eventState);
   
 }
