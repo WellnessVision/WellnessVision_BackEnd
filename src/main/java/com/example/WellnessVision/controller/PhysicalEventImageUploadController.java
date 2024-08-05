@@ -32,7 +32,7 @@ public class PhysicalEventImageUploadController {
     private NotificationService notificationService;
 
     @PostMapping("/physicalEventImageUpload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("event_id") int event_id, @RequestParam("hall_capacity") int hall_capacity, @RequestParam("total_hall_charge") int total_hall_charge, @RequestParam("advance_percentage") double advance_percentage, @RequestParam("advance_payment") int advance_payment, @RequestParam("userEmail") String userEmail, @RequestParam("hpId") int hpId) {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("event_id") int event_id, @RequestParam("hall_capacity") int hall_capacity, @RequestParam("total_hall_charge") int total_hall_charge, @RequestParam("advance_percentage") double advance_percentage, @RequestParam("advance_payment") int advance_payment, @RequestParam("userEmail") String userEmail, @RequestParam("hpId") int hpId, @RequestParam("title") String title, @RequestParam("eventType") String eventType, @RequestParam("ticketPrice") String ticketPrice, @RequestParam("language") String language, @RequestParam("description") String description, @RequestParam("accountNumber") String accountNumber, @RequestParam("accountHolderName") String accountHolderName, @RequestParam("branch") String branch, @RequestParam("bank") String bank) {
         try {
             PhysicalEventPayment physicalEventPayment = new PhysicalEventPayment();
             physicalEventPayment.setPhysical_event_id(event_id);
@@ -55,7 +55,7 @@ public class PhysicalEventImageUploadController {
             notificationService.createNewNotificationForAllUsers(notification);
             ResponseEntity<String> imageLinkResponse = service.uploadFile(file, userEmail);
             if (imageLinkResponse.getStatusCode() == HttpStatus.OK && imageLinkResponse.getBody() != null) {
-                physicalEventService.UploadEventImage(imageLinkResponse.getBody(), event_id, hall_capacity, total_hall_charge, advance_percentage, advance_payment, payment_id);
+                physicalEventService.UploadEventImage(imageLinkResponse.getBody(), event_id, hall_capacity, total_hall_charge, advance_percentage, advance_payment, payment_id, title, eventType, ticketPrice, language, description, accountNumber, accountHolderName, branch, bank);
                 return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("File upload failed", HttpStatus.INTERNAL_SERVER_ERROR);

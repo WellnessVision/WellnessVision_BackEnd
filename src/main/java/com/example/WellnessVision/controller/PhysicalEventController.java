@@ -1,6 +1,7 @@
 package com.example.WellnessVision.controller;
 
 import com.example.WellnessVision.dto.*;
+import com.example.WellnessVision.model.Hall;
 import com.example.WellnessVision.model.NormalUser;
 import com.example.WellnessVision.model.PhysicalEventBooking;
 import com.example.WellnessVision.service.PhysicalEventService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,24 @@ public class PhysicalEventController {
         String Maintain = "Maintain";
         String Unavailable = "Unavailable";
         return service.getEventsByCapacityAndStatus(physicalEvent.getExpectedCapacity(),physicalEvent.getHallType(), Available, Maintain, Unavailable, physicalEvent.getDate(), physicalEvent.getStartTime(), physicalEvent.getEndTime(), physicalEvent.getEventTitle(), physicalEvent.getFinalEventType(), physicalEvent.getFinalDuration(), physicalEvent.getTicketPrice(), physicalEvent.getNullImage(), physicalEvent.getLanguage(), physicalEvent.getEventDescription(), physicalEvent.getHpId(), physicalEvent.getAccountNumber(), physicalEvent.getAccountOwnerName(), physicalEvent.getBranchName(), physicalEvent.getBankName());
+    }
+
+    @GetMapping("/checkAndTemporarilyBookingEventHall")
+    public HallAvailability checkAndTemporarilyBookingEventHall(@RequestParam("hpId") int hpId, @RequestParam("hallId") String hallId, @RequestParam("date") LocalDate date,  @RequestParam("startTime") int startTime,  @RequestParam("endTime") int endTime, @RequestParam("duration") int duration) throws IOException {
+        return service.checkAndTemporarilyBookingEventHall(hpId, hallId, date, startTime, endTime, duration);
+    }
+
+    @GetMapping("/checkTheEventHallUsingDateForPhysicalEvent")
+    public List<Hall> checkTheEventHallUsingDateForPhysicalEvent(@RequestParam("hallType") String hallType, @RequestParam("date") LocalDate date) throws IOException {
+        String Available = "Available";
+        String Maintain = "Maintain";
+        String Unavailable = "Unavailable";
+        return service.checkTheEventHallUsingDateForPhysicalEvent(hallType, date, Available, Maintain, Unavailable);
+    }
+
+    @GetMapping("/getHallBookingAvailableSlotsForGivenHallAndDate")
+    public List<HallBookingTimeSlots> getHallBookingAvailableSlotsForGivenHallAndDate(@RequestParam("hallId") String hallId, @RequestParam("date") LocalDate date) throws IOException {
+        return service.getHallBookingAvailableSlotsForGivenHallAndDate(hallId, date);
     }
 
     @PutMapping("/physicalEvent")

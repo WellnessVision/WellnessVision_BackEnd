@@ -24,5 +24,7 @@ public interface PhysicalEventOrderRepository extends JpaRepository<PhysicalEven
     @Query(value = "DELETE FROM physical_event WHERE event_id = ?1", nativeQuery = true)
     void deletePhysicalEvent(int event_id);
 
+    @Query(value = "SELECT * FROM physical_event WHERE hall_id = ?1 AND date = ?2 ORDER BY start_time", nativeQuery = true)
+    List<PhysicalEvent> getHallBookingAvailableSlotsForGivenHallAndDate(String hallId, LocalDate date);
 
 }
