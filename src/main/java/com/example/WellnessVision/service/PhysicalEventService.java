@@ -1,6 +1,7 @@
 package com.example.WellnessVision.service;
 
 import com.example.WellnessVision.dto.HallAvailability;
+import com.example.WellnessVision.dto.HallBookingTimeSlots;
 import com.example.WellnessVision.dto.HealthProfessionalFineAmountDto;
 import com.example.WellnessVision.dto.ViewPhysicalEventParticipationDetails;
 import com.example.WellnessVision.model.*;
@@ -106,8 +107,8 @@ public class PhysicalEventService {
         order_repository.deleteById(event_id);
     }
 
-    public void UploadEventImage(String eventImage, int eventId, int hall_capacity, int total_hall_charge, double advance_percentage, int advance_payment, int payment_id) throws IOException {
-        repository.UploadEventImage(eventImage, eventId,  hall_capacity, total_hall_charge, advance_percentage, advance_payment, payment_id);
+    public void UploadEventImage(String eventImage, int eventId, int hall_capacity, int total_hall_charge, double advance_percentage, int advance_payment, int payment_id, String title, String eventType, String ticketPrice, String language, String description, String accountNumber, String accountHolderName, String branch, String bank) throws IOException {
+        repository.UploadEventImage(eventImage, eventId,  hall_capacity, total_hall_charge, advance_percentage, advance_payment, payment_id, title, eventType, ticketPrice, language, description, accountNumber, accountHolderName, branch, bank);
     }
 
     public Integer physicalEventPaymentSave(PhysicalEventPayment physicalEventPayment) {
@@ -315,6 +316,98 @@ public class PhysicalEventService {
 
     public NormalUser bookingParticipationUserDetailsForHp(int userId) {
         return normalUserRegisterRepository.getOneUserDetails(userId);
+    }
+
+    public List<Hall> checkTheEventHallUsingDateForPhysicalEvent(String hallType, LocalDate date, String Available, String Maintain, String Unavailable){
+        List<Hall> halls =  repository.checkTheEventHallUsingDateForPhysicalEvent(hallType, date, Available, Maintain, Unavailable);
+        List<Hall> finalHallList =  new ArrayList<>();
+        for (Hall hall : halls) {
+            int totalDuration = 0;
+            List<PhysicalEvent> physicalEvents = order_repository.getHallBookingAvailableSlotsForGivenHallAndDate(hall.getHall_id(), date);
+            for (PhysicalEvent physicalEvent : physicalEvents) {
+                totalDuration = totalDuration + physicalEvent.getFinalDuration();
+            }
+            if(totalDuration != 10){
+                finalHallList.add(hall);
+            }else {
+                hall.setState("fullyBooked");
+                finalHallList.add(hall);
+            }
+        }
+        return finalHallList;
+    }
+
+    public List<HallBookingTimeSlots> getHallBookingAvailableSlotsForGivenHallAndDate(String hallId, LocalDate date){
+        List<PhysicalEvent> physicalEvents = order_repository.getHallBookingAvailableSlotsForGivenHallAndDate(hallId, date);
+        List<HallBookingTimeSlots> hallBookingTimeSlots = new ArrayList<>();
+
+        for (PhysicalEvent physicalEvent : physicalEvents) {
+            HallBookingTimeSlots hallBookingTimeSlotsOne = new HallBookingTimeSlots();
+            hallBookingTimeSlotsOne.setStartTime(physicalEvent.getStartTime());
+            hallBookingTimeSlotsOne.setEndTime(physicalEvent.getEndTime());
+            hallBookingTimeSlots.add(hallBookingTimeSlotsOne);
+        }
+
+        return hallBookingTimeSlots;
+    }
+
+    public HallAvailability checkAndTemporarilyBookingEventHall(int hpId, String hallId, LocalDate date, int startTime, int endTime, int duration){
+        PhysicalEvent physicalEvent = new PhysicalEvent();
+        physicalEvent.setEventTitle("");
+        physicalEvent.setFinalEventType("");
+        physicalEvent.setDate(date);
+        physicalEvent.setStartTime(startTime);
+        physicalEvent.setEndTime(endTime);
+        physicalEvent.setFinalDuration(duration);
+        physicalEvent.setCapacity(0);
+        physicalEvent.setTicketPrice(0);
+        physicalEvent.setEventImage("pending");
+        physicalEvent.setLanguage("");
+        physicalEvent.setHp_id(hpId);
+        physicalEvent.setEvent_description("");
+        physicalEvent.setHall_capacity(0);
+        physicalEvent.setTotal_hall_charge(0);
+        physicalEvent.setAdvance_percentage(0.00);
+        physicalEvent.setAdvance_payment(0);
+        physicalEvent.setPayment_id(0);
+        physicalEvent.setEvent_state("Upcoming");
+        physicalEvent.setAccountNumber("");
+        physicalEvent.setAccountOwnerName("");
+        physicalEvent.setBranchName("");
+        physicalEvent.setBankName("");
+        int date_booking = repository.findByDate(hallId,date);
+        if(date_booking == 0){
+            physicalEvent.setHall_id(hallId);
+            PhysicalEvent savedEvent = order_repository.save(physicalEvent);
+            Optional<Hall> bookHall = repository.findById(hallId);
+            Hall hall_2 = bookHall.get();
+            HallAvailability hallAvailability = new HallAvailability();
+            hallAvailability.setHall_id(hall_2.getHall_id());
+            hallAvailability.setHall_type(hall_2.getHall_type());
+            hallAvailability.setCapacity(hall_2.getCapacity());
+            hallAvailability.setAdvance_percentage(hall_2.getAdvance_percentage());
+            hallAvailability.setCharge(hall_2.getCharge());
+            hallAvailability.setEvent_id(savedEvent.getEvent_id());
+            return hallAvailability;
+        }else {
+            int time_booking = repository.findByTime(hallId, date, startTime, endTime);
+            if(date_booking == time_booking){
+                physicalEvent.setHall_id(hallId);
+                PhysicalEvent savedEvent = order_repository.save(physicalEvent);
+                Optional<Hall> bookHall = repository.findById(hallId);
+                Hall hall_2 = bookHall.get();
+                HallAvailability hallAvailability = new HallAvailability();
+                hallAvailability.setHall_id(hall_2.getHall_id());
+                hallAvailability.setHall_type(hall_2.getHall_type());
+                hallAvailability.setCapacity(hall_2.getCapacity());
+                hallAvailability.setAdvance_percentage(hall_2.getAdvance_percentage());
+                hallAvailability.setCharge(hall_2.getCharge());
+                hallAvailability.setEvent_id(savedEvent.getEvent_id());
+                return hallAvailability;
+            }
+        }
+
+        return null;
     }
 
 
