@@ -7,6 +7,7 @@ import com.example.WellnessVision.model.*;
 import com.example.WellnessVision.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -118,6 +119,16 @@ public class PhysicalEventService {
     public List<PhysicalEvent> getPhysicalEventForHP(int hp_id, String eventState, String searchCode) {
         String searchCodeModify = searchCode + "%";
         return order_repository.getPhysicalEventForHP(hp_id, eventState, searchCodeModify);
+    }
+
+    public List<PhysicalEvent> getAllPhysicalEventsForEM(int hp_id, String searchCode) {
+        String searchCodeModify = searchCode + "%";
+        return order_repository.getAllPhysicalEventsForEM(hp_id, searchCodeModify);
+    }
+
+    @Transactional
+    public void editOnePhysicalEventDetail(int eventId, String eventTitle, String eventDescription){
+        order_repository.editOnePhysicalEventDetailForEM(eventId, eventTitle, eventDescription);
     }
 
     public PhysicalEvent getOnePhysicalEventDetailForHP(int event_id) {
