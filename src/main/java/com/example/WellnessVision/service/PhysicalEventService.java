@@ -340,12 +340,58 @@ public class PhysicalEventService {
     public List<HallBookingTimeSlots> getHallBookingAvailableSlotsForGivenHallAndDate(String hallId, LocalDate date){
         List<PhysicalEvent> physicalEvents = order_repository.getHallBookingAvailableSlotsForGivenHallAndDate(hallId, date);
         List<HallBookingTimeSlots> hallBookingTimeSlots = new ArrayList<>();
+        if(physicalEvents.isEmpty()){
+            HallBookingTimeSlots hallBookingTimeSlot = new HallBookingTimeSlots();
+            hallBookingTimeSlot.setStartTime(8);
+            hallBookingTimeSlot.setEndTime(18);
+            hallBookingTimeSlots.add(hallBookingTimeSlot);
+            return hallBookingTimeSlots;
+        }
+        int FreeStart = physicalEvents.get(0).getStartTime();
+        int FinalTime = physicalEvents.get(physicalEvents.size()-1).getEndTime();
+        int intermediateEndTime = 8;
+        int flag = 1;
+        if(FreeStart > 8){
+            HallBookingTimeSlots hallBookingTimeSlot = new HallBookingTimeSlots();
+            hallBookingTimeSlot.setStartTime(8);
+            hallBookingTimeSlot.setEndTime(FreeStart);
+            hallBookingTimeSlots.add(hallBookingTimeSlot);
+        }
+        while (intermediateEndTime != FinalTime) {
+            for (PhysicalEvent physicalEvent : physicalEvents) {
+                if (physicalEvent.getStartTime() == FreeStart && physicalEvent.getEndTime() > intermediateEndTime) {
+                    intermediateEndTime = physicalEvent.getEndTime();
+                }
+            }
+            while (flag == 1) {
+                flag = 0;
+                for (PhysicalEvent physicalEvent : physicalEvents) {
+                    if (physicalEvent.getStartTime() > FreeStart && physicalEvent.getStartTime() <= intermediateEndTime && physicalEvent.getEndTime() > intermediateEndTime) {
+                        intermediateEndTime = physicalEvent.getEndTime();
+                        flag = 1;
+                    }
+                }
+                if (flag == 0) {
+                    for (PhysicalEvent physicalEvent : physicalEvents) {
+                        if (intermediateEndTime < physicalEvent.getStartTime()) {
+                            HallBookingTimeSlots hallBookingTimeSlot = new HallBookingTimeSlots();
+                            hallBookingTimeSlot.setStartTime(intermediateEndTime);
+                            hallBookingTimeSlot.setEndTime(physicalEvent.getStartTime());
+                            hallBookingTimeSlots.add(hallBookingTimeSlot);
+                            FreeStart = physicalEvent.getStartTime();
+                            intermediateEndTime = physicalEvent.getStartTime();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 
-        for (PhysicalEvent physicalEvent : physicalEvents) {
-            HallBookingTimeSlots hallBookingTimeSlotsOne = new HallBookingTimeSlots();
-            hallBookingTimeSlotsOne.setStartTime(physicalEvent.getStartTime());
-            hallBookingTimeSlotsOne.setEndTime(physicalEvent.getEndTime());
-            hallBookingTimeSlots.add(hallBookingTimeSlotsOne);
+        if(FinalTime < 18){
+            HallBookingTimeSlots hallBookingTimeSlot = new HallBookingTimeSlots();
+            hallBookingTimeSlot.setStartTime(FinalTime);
+            hallBookingTimeSlot.setEndTime(18);
+            hallBookingTimeSlots.add(hallBookingTimeSlot);
         }
 
         return hallBookingTimeSlots;
