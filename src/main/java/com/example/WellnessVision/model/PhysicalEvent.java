@@ -38,6 +38,10 @@ public class PhysicalEvent {
     private String bankName;
     private int ticketBookingCount;
     private String paymentState = "NotPaid";
+    private String VolunteerNeedState = "NoNeed";
+    private String volunteerType;
+    @Column(length = 1000)
+    private String volunteerDescription;
 
     public PhysicalEvent() {
     }
@@ -248,5 +252,29 @@ public class PhysicalEvent {
 
     public void setPaymentState(String paymentState) {
         this.paymentState = paymentState;
+    }
+
+    public String getVolunteerNeedState() {
+        return VolunteerNeedState;
+    }
+
+    public void setVolunteerNeedState(String volunteerNeedState) {
+        VolunteerNeedState = volunteerNeedState;
+    }
+
+    public String getVolunteerType() {
+        return volunteerType;
+    }
+
+    public void setVolunteerType(String volunteerType) {
+        this.volunteerType = volunteerType;
+    }
+
+    public String getVolunteerDescription() {
+        return volunteerDescription;
+    }
+
+    public void setVolunteerDescription(String volunteerDescription) {
+        this.volunteerDescription = volunteerDescription;
     }
 }

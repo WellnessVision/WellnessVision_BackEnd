@@ -1,10 +1,8 @@
 package com.example.WellnessVision.service;
 
-import com.example.WellnessVision.dto.HallAvailability;
-import com.example.WellnessVision.dto.HallBookingTimeSlots;
-import com.example.WellnessVision.dto.HealthProfessionalFineAmountDto;
-import com.example.WellnessVision.dto.ViewPhysicalEventParticipationDetails;
+import com.example.WellnessVision.dto.*;
 import com.example.WellnessVision.model.*;
+import com.example.WellnessVision.model.PhysicalEvent;
 import com.example.WellnessVision.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +28,18 @@ public class PhysicalEventService {
     private final PhysicalEventBookingPaymentRepository physicalEventBookingPaymentRepository;
     private final NotificationRepository notificationRepository;
     private final NormalUserRegisterRepository normalUserRegisterRepository;
+
+    @Autowired
+    VolunteerPhysicalEventRequestRepository volunteerPhysicalEventRequestRepository;
+
+    @Autowired
+    VolunteerPhysicalEventBookingRepository volunteerPhysicalEventBookingRepository;
+
+    @Autowired
+    VolunteerRepository volunteerRepository;
+
+    @Autowired
+    VolunteerPhysicalEventService volunteerPhysicalEventService;
 
     public PhysicalEventService(PhysicalEventOrderRepository orderRepository, PhysicalEventPaymentRepository physicalEventPaymentRepository, DeletedPhysicalEventRepository deletedPhysicalEventRepository, PhysicalEventBookingPaymentRepository physicalEventBookingPaymentRepository, NotificationRepository notificationRepository, NormalUserRegisterRepository normalUserRegisterRepository) {
         this.order_repository = orderRepository;
@@ -456,5 +466,111 @@ public class PhysicalEventService {
         return null;
     }
 
+    public void addNewVolunteerNeedRequestForHP(int eventId, String volunteerType, String volunteerDescription){
+        order_repository.addNewVolunteerNeedRequestForHP(eventId, volunteerType, volunteerDescription, "Need");
+    }
+
+    public void acceptVolunteerPhysicalEventRequestForHP(int requestId){
+        VolunteerPhysicalEventRequest newVolunteerPhysicalEventRequest = volunteerPhysicalEventRequestRepository.getOneVolunteerRequestForPhysicalEventsForHealthProfessionals(requestId);
+        VolunteerPhysicalEventBooking newVolunteerPhysicalEventBooking = new VolunteerPhysicalEventBooking(
+                newVolunteerPhysicalEventRequest.getEventId(),
+                newVolunteerPhysicalEventRequest.getVolunteerId(),
+                "Booked",
+                "Available",
+                "V/" + RandomStringGeneratorService.generateRandomString(7),
+                "NotParticipate",
+                newVolunteerPhysicalEventRequest.getRequestPosition(),
+                newVolunteerPhysicalEventRequest.getExperiences(),
+                newVolunteerPhysicalEventRequest.getPreviousWorksPdf(),
+                newVolunteerPhysicalEventRequest.getRequestTime(),
+                LocalDateTime.now()
+        );
+
+        volunteerPhysicalEventBookingRepository.save(newVolunteerPhysicalEventBooking);
+
+        volunteerPhysicalEventRequestRepository.deleteTheVolunteerRequestForPhysicalEventsForHPByRequestId(requestId);
+
+        Notification notification = new Notification(
+                newVolunteerPhysicalEventRequest.getVolunteerId(),
+                "Accepted Volunteer request",
+                "Your volunteer request of EventId : " + newVolunteerPhysicalEventRequest.getEventId() + " was accepted. You can view more " +
+                        "details about this under My Volunteer Event category",
+                "Unread",
+                LocalDateTime.now()
+        );
+        notificationRepository.save(notification);
+
+    }
+
+    public List<VolunteerDetailsForPhysicalEventDto> getAllVolunteersForPhysicalEventsForHealthProfessionals(int eventId, String searchCode){
+        String modifiedSearchCode = searchCode + "%";
+        List<VolunteerDetailsForPhysicalEventDto> volunteerDetailsForPhysicalEventDtoList = new ArrayList<>();
+        List<VolunteerPhysicalEventBooking> volunteerPhysicalEventBookingList  = volunteerPhysicalEventBookingRepository.getAllVolunteersForPhysicalEventsForHealthProfessionals(eventId, modifiedSearchCode, "Booked");
+        for (VolunteerPhysicalEventBooking oneVolunteerPhysicalEventBooking: volunteerPhysicalEventBookingList) {
+            Volunteer volunteer = volunteerRepository.getVolunteerDetailsByVolunteerId(oneVolunteerPhysicalEventBooking.getVolunteerId());
+            int unreadMessageCount = volunteerPhysicalEventService.getMessageCountChatBoxMessageForVolunteerAndPhysicalEventsForBothUsers(volunteer.getVolunteerId(), eventId, "V");
+            VolunteerDetailsForPhysicalEventDto newVolunteerDetailsForPhysicalEventDto = new VolunteerDetailsForPhysicalEventDto(
+                    volunteer.getVolunteerId(),
+                    oneVolunteerPhysicalEventBooking.getBookingId(),
+                    eventId,
+                    oneVolunteerPhysicalEventBooking.getParticipantId(),
+                    oneVolunteerPhysicalEventBooking.getBookingState(),
+                    oneVolunteerPhysicalEventBooking.getParticipantState(),
+                    volunteer.getFirstName(),
+                    volunteer.getLastName(),
+                    volunteer.getAddress(),
+                    volunteer.getAddress2(),
+                    volunteer.getCity(),
+                    volunteer.getDistrict(),
+                    volunteer.getProvince(),
+                    volunteer.getZip(),
+                    volunteer.getEmail(),
+                    volunteer.getPhoneNumber(),
+                    volunteer.getProfilePicture(),
+                    oneVolunteerPhysicalEventBooking.getRequestPosition(),
+                    oneVolunteerPhysicalEventBooking.getExperiences(),
+                    oneVolunteerPhysicalEventBooking.getPreviousWorksPdf(),
+                    oneVolunteerPhysicalEventBooking.getRequestTime(),
+                    oneVolunteerPhysicalEventBooking.getAcceptTime(),
+                    unreadMessageCount
+            );
+            volunteerDetailsForPhysicalEventDtoList.add(newVolunteerDetailsForPhysicalEventDto);
+        }
+
+        return volunteerDetailsForPhysicalEventDtoList;
+    }
+
+    public VolunteerDetailsForPhysicalEventDto getOneVolunteerDetailsForPhysicalEventsForHealthProfessionals(int bookingId){
+        VolunteerPhysicalEventBooking volunteerPhysicalEventBooking  = volunteerPhysicalEventBookingRepository.getOneVolunteerDetailsForPhysicalEventsForHealthProfessionals(bookingId);
+        Volunteer volunteer = volunteerRepository.getVolunteerDetailsByVolunteerId(volunteerPhysicalEventBooking.getVolunteerId());
+        int unreadMessageCount = volunteerPhysicalEventService.getMessageCountChatBoxMessageForVolunteerAndPhysicalEventsForBothUsers(volunteer.getVolunteerId(), volunteerPhysicalEventBooking.getEventId(), "V");
+        VolunteerDetailsForPhysicalEventDto newVolunteerDetailsForPhysicalEventDto = new VolunteerDetailsForPhysicalEventDto(
+                    volunteer.getVolunteerId(),
+                    volunteerPhysicalEventBooking.getBookingId(),
+                    volunteerPhysicalEventBooking.getEventId(),
+                    volunteerPhysicalEventBooking.getParticipantId(),
+                    volunteerPhysicalEventBooking.getBookingState(),
+                    volunteerPhysicalEventBooking.getParticipantState(),
+                    volunteer.getFirstName(),
+                    volunteer.getLastName(),
+                    volunteer.getAddress(),
+                    volunteer.getAddress2(),
+                    volunteer.getCity(),
+                    volunteer.getDistrict(),
+                    volunteer.getProvince(),
+                    volunteer.getZip(),
+                    volunteer.getEmail(),
+                    volunteer.getPhoneNumber(),
+                    volunteer.getProfilePicture(),
+                    volunteerPhysicalEventBooking.getRequestPosition(),
+                    volunteerPhysicalEventBooking.getExperiences(),
+                    volunteerPhysicalEventBooking.getPreviousWorksPdf(),
+                    volunteerPhysicalEventBooking.getRequestTime(),
+                    volunteerPhysicalEventBooking.getAcceptTime(),
+                    unreadMessageCount
+            );
+
+        return newVolunteerDetailsForPhysicalEventDto;
+    }
 
 }
