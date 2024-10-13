@@ -106,5 +106,4 @@ public class NormalUserPhysicalEventController {
         normalUserPhysicalEventService.deletePhysicalEventBookingForNU(event_id, user_id, booking_id, fineAmount, depositAmount, twoDaysBeforeState);
     }
 
-
 }

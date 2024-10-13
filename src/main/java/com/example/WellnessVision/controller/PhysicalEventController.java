@@ -4,6 +4,8 @@ import com.example.WellnessVision.dto.*;
 import com.example.WellnessVision.model.Hall;
 import com.example.WellnessVision.model.NormalUser;
 import com.example.WellnessVision.model.PhysicalEventBooking;
+import com.example.WellnessVision.model.VolunteerPhysicalEventBooking;
+import com.example.WellnessVision.repository.VolunteerPhysicalEventBookingRepository;
 import com.example.WellnessVision.service.PhysicalEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,6 @@ public class PhysicalEventController {
 
     @Autowired
     private PhysicalEventService service;
-
 
     @PostMapping("/physicalEvent")
     public HallAvailability getEventsByCapacityAndStatus(@RequestBody PhysicalEvent physicalEvent) throws IOException {
@@ -99,6 +100,25 @@ public class PhysicalEventController {
     @GetMapping("/bookingParticipationUserDetailsForHp")
     public NormalUser bookingParticipationUserDetailsForHp(@RequestParam("userId") int userId) {
         return service.bookingParticipationUserDetailsForHp(userId);
+    }
+    @PutMapping("/addNewVolunteerNeedRequestForHP")
+    public void addNewVolunteerNeedRequestForHP(@RequestParam("eventId") int eventId, @RequestParam("volunteerType") String volunteerType, @RequestParam("volunteerDescription") String volunteerDescription) {
+        service.addNewVolunteerNeedRequestForHP(eventId, volunteerType, volunteerDescription);
+    }
+
+    @PutMapping("/acceptVolunteerPhysicalEventRequestForHP")
+    public void acceptVolunteerPhysicalEventRequestForHP(@RequestParam("requestId") int requestId) {
+        service.acceptVolunteerPhysicalEventRequestForHP(requestId);
+    }
+
+    @GetMapping("/getAllVolunteersForPhysicalEventsForHealthProfessionals")
+    public List<VolunteerDetailsForPhysicalEventDto> getAllVolunteersForPhysicalEventsForHealthProfessionals(@RequestParam("eventId") int eventId, @RequestParam("searchCode") String searchCode) {
+        return service.getAllVolunteersForPhysicalEventsForHealthProfessionals(eventId, searchCode);
+    }
+
+    @GetMapping("/getOneVolunteerDetailsForPhysicalEventsForHealthProfessionals")
+    public VolunteerDetailsForPhysicalEventDto getOneVolunteerDetailsForPhysicalEventsForHealthProfessionals(@RequestParam("bookingId") int bookingId) {
+        return service.getOneVolunteerDetailsForPhysicalEventsForHealthProfessionals(bookingId);
     }
 
 }

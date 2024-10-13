@@ -23,7 +23,13 @@ public class HealthProfessionalDashboardService {
         return healthProfessionalRepository.findById(hpId);
     }
 
+    public List<HealthProfessional> allHealthProfessionalDashboardProfileDetails(String searchCode, String searchCode_2) throws IOException {
+        String modifiedSearchCode = searchCode + "%";
+        String modifiedSearchCode_2 = searchCode_2 + "%";
+        return healthProfessionalRepository.allHealthProfessionalDashboardProfileDetails(modifiedSearchCode, modifiedSearchCode_2);
+
     public Optional<List<HealthProfessional>> getAllHealthProfessionals() throws IOException {
         return Optional.ofNullable(healthProfessionalRepository.findAllHealthProfessionals());
     }
+      
 }
