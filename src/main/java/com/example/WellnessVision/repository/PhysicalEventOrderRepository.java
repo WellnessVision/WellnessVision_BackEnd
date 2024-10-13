@@ -13,6 +13,14 @@ public interface PhysicalEventOrderRepository extends JpaRepository<PhysicalEven
     @Query(value = "SELECT * FROM physical_event WHERE hp_id = ?1 AND event_state = ?2 AND event_title LIKE ?3", nativeQuery = true)
     List<PhysicalEvent> getPhysicalEventForHP(int hp_id, String eventState, String searchCode);
 
+    @Query(value = "SELECT * FROM physical_event WHERE hp_id = ?1 AND event_title LIKE ?2", nativeQuery = true)
+    List<PhysicalEvent> getAllPhysicalEventsForEM(int hp_id,  String searchCode);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE physical_event SET event_title = ?2, event_description = ?3 WHERE event_id = ?1", nativeQuery = true)
+    void editOnePhysicalEventDetailForEM(int eventId, String eventTitle, String eventDescription);
+
     @Query(value = "SELECT * FROM physical_event WHERE event_id = ?1", nativeQuery = true)
     PhysicalEvent getOnePhysicalEventDetailForHP(int event_id);
 
