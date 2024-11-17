@@ -39,8 +39,11 @@ public class NormalUserAppointmentService {
         AppointmentSchedule newAppointmentSchedule = healthProfessionalAppointmentScheduleRepository.getAppointmentScheduleMaxBookingCountAndUnavailableDates(appointmentId);
         int currentBookingCount = userAppointmentBookingRepository.getTotalBookingCountPerDateForAppointmentSchedule(appointmentId, date, "Booked");
         int DateBookingCount = userAppointmentBookingRepository.checkUserAppointmentBookingCountOfDateAndAppointmentId(appointmentId, userId, date);
+        Room room = roomRepository.getOneRoomDetailsUsingRoomId(newAppointmentSchedule.getRoomId());
         AppointmentNumberAndBookingState appointmentNumberAndBookingState = new  AppointmentNumberAndBookingState();
-        if((newAppointmentSchedule.getStartUnavailableDate() == null || date.isBefore(newAppointmentSchedule.getStartUnavailableDate()) || (newAppointmentSchedule.getEndUnavailableDate() != null && date.isAfter(newAppointmentSchedule.getEndUnavailableDate()))) && !date.equals(newAppointmentSchedule.getAppointmentBookingCloseDate()) && DateBookingCount == 0){
+        if((newAppointmentSchedule.getStartUnavailableDate() == null || date.isBefore(newAppointmentSchedule.getStartUnavailableDate()) ||
+                (newAppointmentSchedule.getEndUnavailableDate() != null && date.isAfter(newAppointmentSchedule.getEndUnavailableDate()))) &&
+                !date.equals(newAppointmentSchedule.getAppointmentBookingCloseDate()) && DateBookingCount == 0 && ((room.getMaintain_start_date() == null && room.getUnavailable_date() == null) || (room.getMaintain_start_date() != null && (date.isBefore(room.getMaintain_start_date()) || date.isAfter(room.getMaintain_end_date()))) || (room.getUnavailable_date() != null && date.isBefore(room.getUnavailable_date())))){
            if(currentBookingCount < newAppointmentSchedule.getCapacity()){
                String participantId = "P/" + RandomStringGeneratorService.generateRandomString(7);
                UserAppointmentBooking newUserAppointmentBooking = new UserAppointmentBooking(
@@ -73,7 +76,7 @@ public class NormalUserAppointmentService {
             if (DateBookingCount != 0) {
                 appointmentNumberAndBookingState.setBookingSate("You already have an appointment for the selected day");
             } else {
-                appointmentNumberAndBookingState.setBookingSate("The selected day is not available");
+                appointmentNumberAndBookingState.setBookingSate("The selected day is not available or Appointment room under maintenance");
             }
         }
 

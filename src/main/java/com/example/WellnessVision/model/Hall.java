@@ -21,6 +21,18 @@ public class Hall {
     public Hall() {
     }
 
+    public Hall(String hall_id, String hall_type, int capacity, int charge, double advance_percentage, String state, LocalDate maintain_start_date, LocalDate maintain_end_date, LocalDate unavailable_date) {
+        this.hall_id = hall_id;
+        this.hall_type = hall_type;
+        this.capacity = capacity;
+        this.charge = charge;
+        this.advance_percentage = advance_percentage;
+        this.state = state;
+        this.maintain_start_date = maintain_start_date;
+        this.maintain_end_date = maintain_end_date;
+        this.unavailable_date = unavailable_date;
+    }
+
     public String getHall_id() {
         return hall_id;
     }

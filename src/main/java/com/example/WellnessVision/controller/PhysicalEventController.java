@@ -121,4 +121,10 @@ public class PhysicalEventController {
         return service.getOneVolunteerDetailsForPhysicalEventsForHealthProfessionals(bookingId);
     }
 
+    @PutMapping("/autoUpdateThePhysicalEventStateToPrevious")
+    public void autoUpdateThePhysicalEventStateToPrevious()
+    {
+        service.autoUpdateThePhysicalEventStateToPrevious();
+    }
+
 }

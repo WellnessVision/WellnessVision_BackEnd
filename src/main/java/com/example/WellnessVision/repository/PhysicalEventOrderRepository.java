@@ -43,4 +43,25 @@ public interface PhysicalEventOrderRepository extends JpaRepository<PhysicalEven
     @Query(value = "SELECT * FROM physical_event WHERE event_id = ?1", nativeQuery = true)
     PhysicalEvent getHpIdByEventIdForHp(int event_id);
 
+    @Query(value = "SELECT * FROM physical_event WHERE hall_id = ?1 AND event_state = ?2", nativeQuery = true)
+    List<PhysicalEvent> getPhysicalEventsOfOneHallForEventManager(String hallId, String eventState);
+
+    @Query(value = "SELECT DISTINCT pe.date FROM physical_event AS pe WHERE pe.hall_id = ?1 AND pe.event_state = ?3 AND pe.date >= ?2", nativeQuery = true)
+    List<Object[]> getAlreadyBookedDatesOfOneHallForEventManager(String hallId, LocalDate minDate, String eventState);
+
+    @Query(value = "SELECT COUNT(*) AS checkPhysicalEventBookingCount FROM physical_event AS pe WHERE pe.hall_id = ?1 AND pe.event_state = ?4 AND pe.date >= ?2 AND pe.date <= ?3", nativeQuery = true)
+    Integer checkAndSetMaintenanceDateOfHallForEventManager(String hallId, LocalDate startDate, LocalDate endDate, String eventState);
+
+    @Query(value = "SELECT COUNT(*) AS checkPhysicalEventBookingCount FROM physical_event AS pe WHERE pe.hall_id = ?1 AND pe.event_state = ?3 AND pe.date >= ?2", nativeQuery = true)
+    Integer checkAndSetUnavailableDateOfHallForEventManager(String hallId, LocalDate unavailableDate, String eventState);
+
+    @Query(value = "SELECT MAX(pe.date) AS LastBookDate FROM physical_event AS pe WHERE pe.hall_id = ?1 AND pe.event_state = ?3 AND pe.date >= ?2", nativeQuery = true)
+    java.sql.Date getLastBookDateOfHallForEventManager(String hallId, LocalDate startDate, String eventState);
+
+    @Query(value = "SELECT COUNT(*) AS LastBookDateCount FROM physical_event AS pe WHERE pe.hall_id = ?1 AND pe.event_state = ?3 AND pe.date >= ?2", nativeQuery = true)
+    Integer CheckAndSetReduceHallCapacityOfHallForEventManager(String hallId, LocalDate startDate, String eventState);
+
+    @Query(value = "SELECT event_id FROM physical_event AS pe WHERE pe.event_state = ?2 AND pe.date < ?1", nativeQuery = true)
+    Integer[] autoUpdateThePhysicalEventStateToPrevious(LocalDate today, String eventState);
+
 }
