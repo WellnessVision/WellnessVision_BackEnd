@@ -6,6 +6,7 @@ import com.example.WellnessVision.model.PhysicalEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface NormalUserRegisterRepository extends JpaRepository<NormalUser, Integer>{
@@ -13,5 +14,8 @@ public interface NormalUserRegisterRepository extends JpaRepository<NormalUser, 
 
     @Query(value = "SELECT * FROM normal_user WHERE user_id = ?1", nativeQuery = true)
     NormalUser getOneUserDetails(int user_id);
+
+    @Query(value = "SELECT * FROM normal_user", nativeQuery = true)
+    List<NormalUser> adminViewAllUsersForAdmin();
 
 }

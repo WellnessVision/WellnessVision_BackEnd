@@ -76,4 +76,7 @@ public interface HealthProfessionalAppointmentScheduleRepository extends JpaRepo
     @Query(value = "SELECT * FROM appointment_schedule", nativeQuery = true)
     List<AppointmentSchedule> getAllAppointmentSchedulesForHp();
 
+    @Query(value = "SELECT * FROM appointment_schedule WHERE room_id = ?1 ORDER BY appointment_id DESC", nativeQuery = true)
+    List<AppointmentSchedule> getAppointmentSchedulesOfRoomForAppointmentManager(String roomId);
+
 }

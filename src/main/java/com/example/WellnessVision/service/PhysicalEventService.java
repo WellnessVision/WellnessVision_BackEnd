@@ -584,4 +584,11 @@ public class PhysicalEventService {
         return newVolunteerDetailsForPhysicalEventDto;
     }
 
+    public void autoUpdateThePhysicalEventStateToPrevious() {
+       Integer[] eventIds =  order_repository.autoUpdateThePhysicalEventStateToPrevious(LocalDate.now(), "Upcoming");
+        for (int eventId: eventIds) {
+            closeEventBookingForHp(eventId);
+        }
+    }
+
 }

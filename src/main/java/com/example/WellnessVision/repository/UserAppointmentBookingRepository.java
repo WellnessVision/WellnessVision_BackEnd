@@ -1,5 +1,6 @@
 package com.example.WellnessVision.repository;
 
+import com.example.WellnessVision.dto.RoomAlreadyBookedDatesDto;
 import com.example.WellnessVision.model.Notification;
 import com.example.WellnessVision.model.PhysicalEventBooking;
 import com.example.WellnessVision.model.Room;
@@ -82,6 +83,15 @@ public interface UserAppointmentBookingRepository extends JpaRepository<UserAppo
     @Transactional
     @Query(value = "UPDATE user_appointment_booking SET appointment_state = ?3 WHERE booked_appointment_id = ?1 AND booking_date = ?2", nativeQuery = true)
     void changeTheAppointmentStatePerDayForNu(int appointmentId, LocalDate date, String appointmentState);
+
+    @Query(value = "SELECT DISTINCT uABooking.booking_date FROM appointment_schedule AS aShe JOIN user_appointment_booking AS uABooking ON aShe.appointment_id = uABooking.booked_appointment_id WHERE aShe.room_id = ?1 AND uABooking.booking_date >= ?2 AND uABooking.booking_state = ?3 AND uABooking.appointment_state = ?4", nativeQuery = true)
+    List<Object[]> getAlreadyBookedDatesOfOneRoomForAppointmentManager(String roomId, LocalDate minDate, String bookingState, String appointmentState);
+
+    @Query(value = "SELECT COUNT(*) AS checkAppointmentBookingCount FROM appointment_schedule AS aShe JOIN user_appointment_booking AS uABooking ON aShe.appointment_id = uABooking.booked_appointment_id WHERE aShe.room_id = ?1 AND uABooking.booking_date >= ?2 AND uABooking.booking_date <= ?3 AND uABooking.booking_state = ?4 AND uABooking.appointment_state = ?5", nativeQuery = true)
+    Integer checkAndSetMaintenanceDateOfRoomsForAppointmentManager(String roomId, LocalDate startDate, LocalDate endDate, String bookingState, String appointmentState);
+
+    @Query(value = "SELECT COUNT(*) AS checkAppointmentBookingCount FROM appointment_schedule AS aShe JOIN user_appointment_booking AS uABooking ON aShe.appointment_id = uABooking.booked_appointment_id WHERE aShe.room_id = ?1 AND uABooking.booking_date >= ?2 AND uABooking.booking_state = ?3 AND uABooking.appointment_state = ?4", nativeQuery = true)
+    Integer checkAndSetUnavailableDateOfRoomsForAppointmentManager(String roomId, LocalDate unavailableDate, String bookingState, String appointmentState);
 
 }
 
