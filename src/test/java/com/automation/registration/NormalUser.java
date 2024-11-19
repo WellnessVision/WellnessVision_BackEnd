@@ -957,6 +957,72 @@ public class NormalUser {
         }
     }
 
+    @Test
+    public void invalidProfilePictureType() {
+        driver.findElement(By.id("register_landing_page")).click();
+
+        String sendFirstName = "Naveen";
+        String sendLastName = "Dasanayaka";
+        String sendEmail = "naveeen@gmail.com";
+        String sendPassword = "Inod@2000";
+        String sendPasswordConfirm = "Inod@2000";
+        String sendPhone = "0771234567";
+        String sendAddress1 = "83/C";
+        String sendAddress2 = "Meegalla";
+        String sendCity = "Urapola";
+        String sendPostalCode = "11126";
+        String sendPreferences = "diabetics";
+        String sendProfilePic = "C:\\Users\\User\\Desktop\\Final Examinations Timetable.pdf";
+
+        WebElement firstName = driver.findElement(By.id("FirstName"));
+        firstName.sendKeys(sendFirstName);
+        WebElement lastName = driver.findElement(By.id("LastName"));
+        lastName.sendKeys(sendLastName);
+        WebElement email = driver.findElement(By.id("exampleInputEmail1"));
+        email.sendKeys(sendEmail);
+        WebElement password = driver.findElement(By.id("Password"));
+        password.sendKeys(sendPassword);
+        WebElement passwordConfirm = driver.findElement(By.id("Password_confirm"));
+        passwordConfirm.sendKeys(sendPasswordConfirm);
+        WebElement phone = driver.findElement(By.id("phone"));
+        phone.sendKeys(sendPhone);
+        WebElement address1 = driver.findElement(By.id("inputAddress"));
+        address1.sendKeys(sendAddress1);
+        WebElement address2 = driver.findElement(By.id("inputAddress2"));
+        address2.sendKeys(sendAddress2);
+        WebElement city = driver.findElement(By.id("inputCity"));
+        city.sendKeys(sendCity);
+        WebElement district = driver.findElement(By.xpath("(//select[@id='inputState'])[1]"));
+        district.click();
+        WebElement selectDistrict = driver.findElement(By.xpath("//option[text()='Gampaha']"));
+        selectDistrict.click();
+        WebElement province = driver.findElement(By.xpath("(//select[@id='inputState'])[2]"));
+        province.click();
+        WebElement selectProvince = driver.findElement(By.xpath("//option[text()='Western']"));
+        selectProvince.click();
+        WebElement postalCode = driver.findElement(By.id("inputZip"));
+        postalCode.sendKeys(sendPostalCode);
+        WebElement preferences = driver.findElement(By.xpath("//div/label[contains(text(),'what are you looking for')]/following-sibling::input[@placeholder='Eg: diabetes, yoga']"));
+        preferences.sendKeys(sendPreferences);
+        WebElement profilePic = driver.findElement(By.xpath("//div/label[normalize-space(text())='Profile pic']/following-sibling::input[@placeholder='Eg: diabetes, yoga']"));
+        profilePic.sendKeys(sendProfilePic);
+
+        WebElement registerButton = driver.findElement(By.xpath("//button[text()='Register']"));
+        Actions actions = new Actions(driver);
+        actions.moveToElement(registerButton).perform();
+        registerButton.click();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        try {
+            By message = By.xpath("//h5[text()='Registration Successful. Thank you!']");
+            wait.until(ExpectedConditions.visibilityOfElementLocated(message));
+            System.out.println("Registration successful message appeared. Succeed with invalid profile picture type");
+            driver.findElement(By.xpath("//button[contains(text(),'Thanks!')]")).click();
+        } catch (TimeoutException e) {
+            System.out.println("Registration successful message did not appear within the timeout.");
+        }
+    }
+
     @AfterMethod
     public void tearDown() {
         driver.quit();
