@@ -31,9 +31,9 @@ public class LoginService {
         loginRepository.save(login);
     }
 
-//    public Integer login_count(String user_type) {
-//        return loginRepository.login_count(user_type);
-//    }
-
+    public int adminRegisterLogin(Login login) {
+        loginRepository.save(login);
+        return login.getId();
+    }
 
 }

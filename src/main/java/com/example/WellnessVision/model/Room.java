@@ -6,55 +6,45 @@ import jakarta.persistence.Id;
 import java.time.LocalDate;
 
 @Entity
-public class Hall {
+public class Room {
     @Id
-    private String hall_id;
-    private String hall_type;
-    private int capacity;
+    private String roomId;
+    private String roomType;
     private int charge;
-    private double advance_percentage;
+    private double advancePercentage;
     private String state;
     private LocalDate maintain_start_date;
     private LocalDate maintain_end_date;
     private LocalDate unavailable_date;
 
-    public Hall() {
+    public Room() {
     }
 
-    public Hall(String hall_id, String hall_type, int capacity, int charge, double advance_percentage, String state, LocalDate maintain_start_date, LocalDate maintain_end_date, LocalDate unavailable_date) {
-        this.hall_id = hall_id;
-        this.hall_type = hall_type;
-        this.capacity = capacity;
+    public Room(String roomId, String roomType, int charge, double advancePercentage, String state, LocalDate maintain_start_date, LocalDate maintain_end_date, LocalDate unavailable_date) {
+        this.roomId = roomId;
+        this.roomType = roomType;
         this.charge = charge;
-        this.advance_percentage = advance_percentage;
+        this.advancePercentage = advancePercentage;
         this.state = state;
         this.maintain_start_date = maintain_start_date;
         this.maintain_end_date = maintain_end_date;
         this.unavailable_date = unavailable_date;
     }
 
-    public String getHall_id() {
-        return hall_id;
+    public String getRoomId() {
+        return roomId;
     }
 
-    public void setHall_id(String hall_id) {
-        this.hall_id = hall_id;
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
     }
 
-    public String getHall_type() {
-        return hall_type;
+    public String getRoomType() {
+        return roomType;
     }
 
-    public void setHall_type(String hall_type) {
-        this.hall_type = hall_type;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
     }
 
     public int getCharge() {
@@ -63,6 +53,14 @@ public class Hall {
 
     public void setCharge(int charge) {
         this.charge = charge;
+    }
+
+    public double getAdvancePercentage() {
+        return advancePercentage;
+    }
+
+    public void setAdvancePercentage(double advancePercentage) {
+        this.advancePercentage = advancePercentage;
     }
 
     public String getState() {
@@ -95,13 +93,5 @@ public class Hall {
 
     public void setUnavailable_date(LocalDate unavailable_date) {
         this.unavailable_date = unavailable_date;
-    }
-
-    public double getAdvance_percentage() {
-        return advance_percentage;
-    }
-
-    public void setAdvance_percentage(double advance_percentage) {
-        this.advance_percentage = advance_percentage;
     }
 }

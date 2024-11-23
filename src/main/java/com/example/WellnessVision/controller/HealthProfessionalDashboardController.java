@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -21,6 +22,11 @@ public class HealthProfessionalDashboardController {
     @GetMapping("/healthProfessionalDashboardProfileDetails")
     public Optional<HealthProfessional> healthProfessionalDashboardProfileDetails(@RequestParam("hpId") int hpId) throws IOException {
         return healthProfessionalDashboardService.healthProfessionalDashboardProfileDetails(hpId);
+    }
+
+    @GetMapping("/allHealthProfessionalDashboardProfileDetails")
+    public List<HealthProfessional> allHealthProfessionalDashboardProfileDetails(String searchCode, String searchCode_2) throws IOException {
+        return healthProfessionalDashboardService.allHealthProfessionalDashboardProfileDetails(searchCode, searchCode_2);
     }
 
 }

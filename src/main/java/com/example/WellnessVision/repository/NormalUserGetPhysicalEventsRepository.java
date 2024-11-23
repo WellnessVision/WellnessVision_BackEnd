@@ -31,4 +31,9 @@ public interface NormalUserGetPhysicalEventsRepository extends JpaRepository<Phy
     @Query("SELECT pe FROM PhysicalEvent pe JOIN PhysicalEventBooking peb ON pe.event_id = peb.eventId WHERE peb.userId = ?1 AND peb.bookingState = ?2 AND peb.eventState = ?3")
     List<PhysicalEvent> getBookedUpcomingPhysicalEventsForUsers(int userId, String bookingState, String eventState);
 
+    @Query("SELECT pe FROM PhysicalEvent pe JOIN VolunteerPhysicalEventBooking veb ON pe.event_id = veb.eventId WHERE veb.volunteerId = ?1 AND veb.bookingState = ?2 AND veb.eventState = ?3")
+    List<PhysicalEvent> getVolunteerUpcomingPhysicalEventsForVolunteers(int volunteerId, String bookingState, String eventState);
+
+    @Query(value = "SELECT * FROM physical_event WHERE volunteer_need_state = ?4 AND event_state = ?1 AND event_title LIKE ?2 AND volunteer_type LIKE ?3", nativeQuery = true)
+    List<PhysicalEvent> getVolunteerNeedUpcomingPhysicalEventsForVolunteer(String eventState, String searchTitleCodeModify, String searchVolunteerCodeModify, String volunteerNeedState);
 }
