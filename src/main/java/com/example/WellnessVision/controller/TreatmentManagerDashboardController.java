@@ -9,7 +9,8 @@ import com.example.WellnessVision.service.EventManagerService;
 import com.example.WellnessVision.service.HealthProfessionalDashboardService;
 import com.example.WellnessVision.service.PhysicalEventService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONException;
+// import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.json.JSONException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -103,7 +103,15 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
+			<!-- <version>3.3.0</version> -->
 			<optional>true</optional>
+		</dependency>
+
+		<!-- temporary json org -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20231013</version>
 		</dependency>
 
 		<dependency>
