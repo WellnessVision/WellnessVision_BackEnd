@@ -1,16 +1,1 @@
-cloud:
-  aws:
-    credentials:
-      access-key: AKIATCKAMQQE4V5VWA6Z
-      secret-key: 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
-    region:
-      static: ap-south-1
-    stack:
-      auto: false
-
-application:
-  bucket:
-    name: wellnessvision
-
-
 
