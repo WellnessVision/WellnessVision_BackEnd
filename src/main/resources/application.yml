@@ -1,16 +1,16 @@
 cloud:
   aws:
     credentials:
-      access-key: AKIATCKAMQQE4V5VWA6Z
-      secret-key: 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
+      access-key: ${awsAccessKeyId}
+      secret-key: ${awsSecretAccessKey}
     region:
-      static: ap-south-1
+      static: ${awsRegion}
     stack:
       auto: false
 
 application:
   bucket:
-    name: wellnessvision
+    name: ${awsS3BucketName}
 
 
 
