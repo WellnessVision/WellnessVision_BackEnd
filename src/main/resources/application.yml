@@ -11,6 +11,3 @@ cloud:
 application:
   bucket:
     name: ${awsS3BucketName}
-
-
-
